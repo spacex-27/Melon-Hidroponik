@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -1209,7 +1209,6 @@
     <button class="icon-btn" onclick="showPage('settings')">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.2 3.2l1 1M11.8 11.8l1 1M3.2 12.8l1-1M11.8 4.2l1-1"/></svg>
     </button>
-    <div class="avatar">AD</div>
   </div>
 </div>
 
@@ -1219,51 +1218,51 @@
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="nav-group">
-      <div class="nav-group-label">Utama</div>
+      <div class="nav-group-label" id="nav-grp-utama">Utama</div>
       <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')" data-label="Dashboard">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
-        Dashboard
+        <span id="nav-lbl-dashboard">Dashboard</span>
       </div>
       <div class="nav-item" id="nav-zones" onclick="showPage('zones')" data-label="Zona Tanam">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2C5.5 5 3.5 7 3.5 10a4.5 4.5 0 009 0C12.5 7 10.5 5 8 2z"/></svg>
-        Zona Tanam
+        <span id="nav-lbl-zones">Zona Tanam</span>
       </div>
       <div class="nav-item" id="nav-sensors" onclick="showPage('sensors')" data-label="Sensor">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.3 3.3l1.4 1.4M11.3 11.3l1.4 1.4M3.3 12.7l1.4-1.4M11.3 4.7l1.4-1.4"/></svg>
-        Sensor
+        <span id="nav-lbl-sensors">Sensor</span>
       </div>
       <div class="nav-item" id="nav-pumps" onclick="showPage('pumps')" data-label="Pompa">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1.5" y="5" width="8" height="7" rx="1.5"/><path d="M9.5 8.5h2a2.5 2.5 0 000-5H7.5M4.5 8.5V8"/><circle cx="5" cy="9.5" r="1.5" fill="currentColor" stroke="none" opacity="0.4"/></svg>
-        Pompa & Irigasi
+        <span id="nav-lbl-pumps">Pompa & Irigasi</span>
       </div>
     </div>
 
     <div class="nav-group">
-      <div class="nav-group-label">Analitik</div>
+      <div class="nav-group-label" id="nav-grp-analitik">Analitik</div>
       <div class="nav-item" id="nav-analytics" onclick="showPage('analytics')" data-label="Grafik & Tren">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 12l3-4 3 2 3-5.5 3 2.5"/></svg>
-        Grafik & Tren
+        <span id="nav-lbl-analytics">Grafik & Tren</span>
       </div>
       <div class="nav-item" id="nav-harvest" onclick="showPage('harvest')" data-label="Panen">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2.5 14l1.8-5h7.4l1.8 5H2.5z"/><path d="M5.5 9V6.5a2.5 2.5 0 015 0V9"/><path d="M8 4V2"/></svg>
-        Panen
+        <span id="nav-lbl-harvest">Panen</span>
       </div>
       <div class="nav-item" id="nav-weather" onclick="showPage('weather')" data-label="Cuaca">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4.5 11a3.5 3.5 0 116.6-1.6A2.5 2.5 0 1112 13H4a2.5 2.5 0 010-5z"/></svg>
-        Cuaca
+        <span id="nav-lbl-weather">Cuaca</span>
       </div>
     </div>
 
     <div class="nav-group">
-      <div class="nav-group-label">Sistem</div>
+      <div class="nav-group-label" id="nav-grp-sistem">Sistem</div>
       <div class="nav-item" id="nav-alerts" onclick="showPage('alerts')" data-label="Notifikasi">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1a5 5 0 00-5 5v3l-1 2h12l-1-2V6a5 5 0 00-5-5z"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke-linecap="round"/></svg>
-        Notifikasi
+        <span id="nav-lbl-alerts">Notifikasi</span>
         <span class="nav-badge">3</span>
       </div>
       <div class="nav-item" id="nav-settings" onclick="showPage('settings')" data-label="Pengaturan">
         <svg class="nav-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.2 3.2l1 1M11.8 11.8l1 1M3.2 12.8l1-1M11.8 4.2l1-1"/></svg>
-        Pengaturan
+        <span id="nav-lbl-settings">Pengaturan</span>
       </div>
     </div>
 
@@ -1280,7 +1279,7 @@
     <div class="page active" id="page-dashboard">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Dashboard Utama</div>
+          <div class="page-title" id="dash-title">Dashboard Utama</div>
           <div class="page-sub" id="dashboard-date-sub">Memuat...</div>
         </div>
         <button class="hdr-btn">
@@ -1292,7 +1291,7 @@
       <div class="metrics-grid">
         <div class="mc">
           <div class="mc-top">
-            <span class="mc-label">Suhu Air</span>
+            <span class="mc-label" id="lbl-suhu-air">Suhu Air</span>
             <div class="mc-ico" style="background:rgba(55,138,221,0.15)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#378ADD"><path d="M8 1a2 2 0 00-2 2v6a3 3 0 104 0V3a2 2 0 00-2-2z"/></svg>
             </div>
@@ -1303,7 +1302,7 @@
         </div>
         <div class="mc">
           <div class="mc-top">
-            <span class="mc-label">Suhu Ruangan</span>
+            <span class="mc-label" id="lbl-suhu-ruang">Suhu Ruangan</span>
             <div class="mc-ico" style="background:rgba(226,75,74,0.12)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#E24B4A"><path d="M8 1a2 2 0 00-2 2v6a3 3 0 104 0V3a2 2 0 00-2-2z"/></svg>
             </div>
@@ -1314,7 +1313,7 @@
         </div>
         <div class="mc">
           <div class="mc-top">
-            <span class="mc-label">pH Air</span>
+            <span class="mc-label" id="lbl-ph">pH Air</span>
             <div class="mc-ico" style="background:rgba(29,158,117,0.15)">
               <svg width="14" height="14" viewBox="0 0 14 14"><text x="0" y="11" font-size="9" font-weight="700" fill="#1D9E75">pH</text></svg>
             </div>
@@ -1325,7 +1324,7 @@
         </div>
         <div class="mc">
           <div class="mc-top">
-            <span class="mc-label">TDS / Nutrisi</span>
+            <span class="mc-label" id="lbl-tds">TDS / Nutrisi</span>
             <div class="mc-ico" style="background:rgba(186,117,23,0.15)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#BA7517"><path d="M8 2C6 5 4 7 4 10a4 4 0 008 0c0-3-2-5-4-8z"/></svg>
             </div>
@@ -1336,7 +1335,7 @@
         </div>
         <div class="mc">
           <div class="mc-top">
-            <span class="mc-label">Kelembapan Tanah</span>
+            <span class="mc-label" id="lbl-kelembapan">Kelembapan Tanah</span>
             <div class="mc-ico" style="background:rgba(127,119,221,0.15)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#7F77DD"><path d="M8 2C6 5 4 7 4 10a4 4 0 008 0c0-3-2-5-4-8z"/></svg>
             </div>
@@ -1892,10 +1891,13 @@
     <div class="page" id="page-alerts">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Notifikasi</div>
+          <div class="page-title" id="notif-page-title">Notifikasi</div>
           <div class="page-sub" id="alerts-sub">0 notifikasi belum dibaca</div>
         </div>
-        <button class="hdr-btn" onclick="markAllRead()">Tandai semua dibaca</button>
+        <div style="display:flex;gap:8px">
+          <button class="hdr-btn" id="btn-mark-all-read" onclick="markAllRead()" style="margin-right:0">Tandai semua dibaca</button>
+          <button class="hdr-btn" id="btn-delete-all" onclick="deleteAllNotifs()" style="border-color:rgba(226,75,74,0.4);color:#E24B4A;background:rgba(226,75,74,0.07)" onmouseover="this.style.background='rgba(226,75,74,0.14)'" onmouseout="this.style.background='rgba(226,75,74,0.07)'">Hapus semua</button>
+        </div>
       </div>
       <div class="card">
         <div class="alert-stack" id="alerts-list"></div>
@@ -1906,8 +1908,8 @@
     <div class="page" id="page-settings">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Pengaturan Sistem</div>
-          <div class="page-sub">Konfigurasi batas sensor dan otomasi — dikirim ke ESP32 via MQTT</div>
+          <div class="page-title" id="settings-page-title">Pengaturan Sistem</div>
+          <div class="page-sub" id="settings-page-sub">Konfigurasi batas sensor dan otomasi — dikirim ke ESP32 via MQTT</div>
         </div>
 
       </div>
@@ -2029,10 +2031,26 @@
           </div>
         </div>
 
+        <!-- BAHASA / LANGUAGE -->
+        <div class="card">
+          <div class="card-title">Bahasa / Language</div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" id="lang-label-title">Pilih Bahasa</div>
+              <div class="setting-sub" id="lang-label-sub">Ubah tampilan teks dashboard</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button id="lang-id" onclick="setLang('id')" style="padding:6px 18px;border-radius:6px;border:1px solid var(--accent);background:rgba(29,158,117,0.15);color:var(--accent);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500">🇮🇩 Indonesia</button>
+              <button id="lang-en" onclick="setLang('en')" style="padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500">🇬🇧 English</button>
+            </div>
+          </div>
+          <div class="card-send-row">
+            <span class="card-send-status" id="lang-status"></span>
+          </div>
+        </div>
+
       </div>
     </div>
-
-  </div><!-- /main -->
 </div><!-- /layout -->
 
 <script>
@@ -2327,6 +2345,122 @@ async function sendWhatsApp(msg) {
 /* Batas threshold (bisa diubah dari settings) */
 const THRESHOLDS = { phMin: 5.5, phMax: 6.5, suhuMin: 18, suhuMax: 26, tdsMin: 800, tdsMax: 1600 };
 
+/* ══════════════════════════════════════════════════════
+   SISTEM BAHASA (i18n)
+   ══════════════════════════════════════════════════════ */
+const LANG = {
+  id: {
+    // Topbar
+    mqttStatus: 'MQTT terhubung · live',
+    // Sidebar
+    utama: 'UTAMA', analitik: 'ANALITIK', sistem: 'SISTEM',
+    navDashboard: 'Dashboard', navZona: 'Zona Tanam', navSensor: 'Sensor',
+    navPompa: 'Pompa & Irigasi', navGrafik: 'Grafik & Tren', navPanen: 'Panen',
+    navCuaca: 'Cuaca', navNotif: 'Notifikasi', navPengaturan: 'Pengaturan',
+    // Dashboard
+    dashTitle: 'Dashboard Utama',
+    refreshBtn: 'Refresh data',
+    // Sensor cards
+    suhuAirLabel: 'SUHU AIR', suhuRuangLabel: 'SUHU RUANGAN',
+    phLabel: 'PH AIR', tdsLabel: 'TDS / NUTRISI', kelembapanLabel: 'KELEMBAPAN TANAH',
+    // Notifications page
+    notifTitle: 'Notifikasi',
+    markAllRead: 'Tandai semua dibaca',
+    deleteAll: 'Hapus semua',
+    noNotif: 'Tidak ada notifikasi',
+    // Settings
+    settingsTitle: 'Pengaturan Sistem',
+    settingsSub: 'Konfigurasi batas sensor dan otomasi — dikirim ke ESP32 via MQTT',
+    langLabel: 'Pilih Bahasa', langSub: 'Ubah tampilan teks dashboard',
+  },
+  en: {
+    mqttStatus: 'MQTT connected · live',
+    utama: 'MAIN', analitik: 'ANALYTICS', sistem: 'SYSTEM',
+    navDashboard: 'Dashboard', navZona: 'Grow Zones', navSensor: 'Sensors',
+    navPompa: 'Pumps & Irrigation', navGrafik: 'Charts & Trends', navPanen: 'Harvest',
+    navCuaca: 'Weather', navNotif: 'Notifications', navPengaturan: 'Settings',
+    dashTitle: 'Main Dashboard',
+    refreshBtn: 'Refresh data',
+    suhuAirLabel: 'WATER TEMP', suhuRuangLabel: 'ROOM TEMP',
+    phLabel: 'WATER PH', tdsLabel: 'TDS / NUTRIENTS', kelembapanLabel: 'SOIL MOISTURE',
+    notifTitle: 'Notifications',
+    markAllRead: 'Mark all as read',
+    deleteAll: 'Delete all',
+    noNotif: 'No notifications',
+    settingsTitle: 'System Settings',
+    settingsSub: 'Configure sensor limits and automation — sent to ESP32 via MQTT',
+    langLabel: 'Select Language', langSub: 'Change dashboard display language',
+  }
+};
+
+let currentLang = localStorage.getItem('hydrosense_lang') || 'id';
+
+function setLang(lang) {
+  currentLang = lang;
+  try { localStorage.setItem('hydrosense_lang', lang); } catch(e) {}
+  applyLang();
+  const statusEl = document.getElementById('lang-status');
+  if (statusEl) statusEl.textContent = lang === 'id' ? '✓ Bahasa Indonesia diterapkan' : '✓ English applied';
+}
+
+function applyLang() {
+  const L = LANG[currentLang] || LANG.id;
+
+  // Buttons active state
+  const btnId = document.getElementById('lang-id');
+  const btnEn = document.getElementById('lang-en');
+  if (btnId && btnEn) {
+    if (currentLang === 'id') {
+      btnId.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--accent);background:rgba(29,158,117,0.15);color:var(--accent);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
+      btnEn.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
+    } else {
+      btnEn.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--accent);background:rgba(29,158,117,0.15);color:var(--accent);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
+      btnId.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
+    }
+  }
+
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  const setHTML = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+
+  // Sidebar nav labels
+  setText('nav-lbl-dashboard', L.navDashboard);
+  setText('nav-lbl-zones', L.navZona);
+  setText('nav-lbl-sensors', L.navSensor);
+  setText('nav-lbl-pumps', L.navPompa);
+  setText('nav-lbl-analytics', L.navGrafik);
+  setText('nav-lbl-harvest', L.navPanen);
+  setText('nav-lbl-weather', L.navCuaca);
+  setText('nav-lbl-alerts', L.navNotif);
+  setText('nav-lbl-settings', L.navPengaturan);
+  setText('nav-grp-utama', L.utama);
+  setText('nav-grp-analitik', L.analitik);
+  setText('nav-grp-sistem', L.sistem);
+
+  // Sensor card labels
+  setText('lbl-suhu-air', L.suhuAirLabel);
+  setText('lbl-suhu-ruang', L.suhuRuangLabel);
+  setText('lbl-ph', L.phLabel);
+  setText('lbl-tds', L.tdsLabel);
+  setText('lbl-kelembapan', L.kelembapanLabel);
+
+  // Dashboard title
+  setText('dash-title', L.dashTitle);
+
+  // Notifications page
+  setText('notif-page-title', L.notifTitle);
+  setText('btn-mark-all-read', L.markAllRead);
+  setText('btn-delete-all', L.deleteAll);
+
+  // Settings page
+  setText('settings-page-title', L.settingsTitle);
+  setText('settings-page-sub', L.settingsSub);
+  setText('lang-label-title', L.langLabel);
+  setText('lang-label-sub', L.langSub);
+
+  // Re-render notifs with new language
+  renderNotifs();
+}
+
 /* Array notifikasi aktif */
 let notifications = [];
 let notifIdCounter = 1;
@@ -2370,7 +2504,8 @@ function renderNotifs() {
   const list = document.getElementById('alerts-list');
   if (!list) return;
   if (notifications.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px">Tidak ada notifikasi</div>';
+    const L = LANG[currentLang] || LANG.id;
+    list.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px">${L.noNotif}</div>`;
     return;
   }
   const typeMap = {
@@ -2415,6 +2550,13 @@ function deleteNotif(id) {
 
 function markAllRead() {
   notifications.forEach(n => n.read = true);
+  renderNotifs();
+  updateNotifBadge();
+}
+
+function deleteAllNotifs() {
+  if (!confirm('Hapus semua notifikasi?')) return;
+  notifications = [];
   renderNotifs();
   updateNotifBadge();
 }
@@ -2529,6 +2671,7 @@ function initNotifs() {
   updateNotifBadge();
   loadNotifPrefs();
   loadWAConfig();
+  applyLang();
 }
 
 /* ── CLOCK ──────────────────────────────── */
@@ -2600,9 +2743,9 @@ function applyToUI(data) {
   setBar('d-hum-bar', kelembapan);
 
   /* ── trend labels dashboard ── */
-  const phOk   = ph >= 5.5 && ph <= 6.5;
-  const tempOk = suhuAir >= 18 && suhuAir <= 26;
-  const tdsOk  = tds >= 800 && tds <= 1500;
+  const phOk   = ph >= THRESHOLDS.phMin && ph <= THRESHOLDS.phMax;
+  const tempOk = suhuAir >= THRESHOLDS.suhuMin && suhuAir <= THRESHOLDS.suhuMax;
+  const tdsOk  = tds >= THRESHOLDS.tdsMin && tds <= THRESHOLDS.tdsMax;
   const humOk  = kelembapan >= 40 && kelembapan <= 80;
 
   const setTrend = (id, ok, okText, badText) => {
@@ -2611,10 +2754,10 @@ function applyToUI(data) {
     el.textContent = ok ? okText : badText;
     el.className = 'mc-trend ' + (ok ? 'trend-ok' : 'trend-bad');
   };
-  setTrend('d-temp-trend',       tempOk, '● optimal 18–26°C', '⚠ di luar batas!');
+  setTrend('d-temp-trend',       tempOk, `● optimal ${THRESHOLDS.suhuMin}–${THRESHOLDS.suhuMax}°C`, '⚠ di luar batas!');
   setTrend('d-suhu-ruang-trend', suhuRuang <= 35, '● normal', '⚠ terlalu panas!');
-  setTrend('d-ph-trend',         phOk,   '● optimal 5.5–6.5', '⚠ di luar batas!');
-  setTrend('d-tds-trend',        tdsOk,  '● optimal 800–1500', '⚠ di luar batas!');
+  setTrend('d-ph-trend',         phOk,   `● optimal ${THRESHOLDS.phMin}–${THRESHOLDS.phMax}`, '⚠ di luar batas!');
+  setTrend('d-tds-trend',        tdsOk,  `● optimal ${THRESHOLDS.tdsMin}–${THRESHOLDS.tdsMax} ppm`, '⚠ di luar batas!');
   setTrend('d-hum-trend',        humOk,  '● optimal 40–80%', '⚠ di luar batas!');
 
   if (elPh)   elPh.style.color   = phOk   ? '' : '#E24B4A';
