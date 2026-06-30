@@ -652,6 +652,37 @@
 
   /* ── TABLE ──────────────────────────────────────── */
   .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+
+  /* Parameter fase — kartu responsif pengganti tabel lebar */
+  .fase-param-list { display: flex; flex-direction: column; gap: 10px; }
+  .fase-param-item {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    background: var(--bg-hover);
+  }
+  .fase-param-item.active {
+    border-color: rgba(29,158,117,0.4);
+    background: rgba(29,158,117,0.06);
+  }
+  .fpi-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .fpi-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+  .fpi-active-badge {
+    font-size: 10px; font-family: var(--font-mono); font-weight: 600;
+    color: var(--accent); background: rgba(29,158,117,0.15);
+    border: 1px solid rgba(29,158,117,0.35); border-radius: 99px;
+    padding: 2px 9px; letter-spacing: 0.3px;
+  }
+  .fpi-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+  .fpi-stat { display: flex; flex-direction: column; gap: 2px; background: var(--bg); border-radius: 6px; padding: 7px 9px; }
+  .fpi-stat-lbl { font-size: 9.5px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .fpi-stat-val { font-size: 13px; font-family: var(--font-mono); color: var(--text-primary); font-weight: 600; }
+  .fpi-note { font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+
+  @media (max-width: 640px) {
+    .fpi-stats { grid-template-columns: repeat(2, 1fr); }
+    .fase-param-item { padding: 12px 14px; }
+  }
   .data-table th { text-align: left; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-bottom: 1px solid var(--border); font-weight: 400; }
   .data-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text-primary); font-family: var(--font-mono); }
   .data-table tr:last-child td { border-bottom: none; }
@@ -721,14 +752,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 0;
+    gap: 16px;
+    padding: 13px 0;
     border-bottom: 1px solid var(--border);
   }
 
   .setting-row:last-child { border-bottom: none; }
-  .setting-label { font-size: 13px; color: var(--text-primary); }
-  .setting-sub { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 1px; }
-  .setting-ctrl { display: flex; align-items: center; gap: 8px; }
+  .setting-row > div:first-child { flex: 1; min-width: 0; }
+  .setting-label { font-size: 13px; color: var(--text-primary); font-weight: 500; letter-spacing: 0.1px; }
+  .setting-sub { font-size: 11.5px; color: var(--text-muted); font-family: var(--font-body); line-height: 1.5; margin-top: 4px; }
+  .setting-ctrl { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
   input[type=range] {
     appearance: none;
@@ -904,6 +937,9 @@
   #harvest-progress-fill { background: linear-gradient(90deg, var(--accent-dim), var(--accent)) !important; box-shadow: 0 0 8px rgba(29,158,117,0.35); }
   #weather-empty { border: 1px dashed rgba(29,158,117,0.2); }
   .sync-badge { transition: all 0.25s; }
+  .lang-btn { padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500;transition:all 0.15s; }
+  .lang-btn:hover { border-color:var(--border-bright);color:var(--text-primary); }
+  .lang-btn.active-lang { border-color:var(--accent);background:rgba(29,158,117,0.15);color:var(--accent); }
   .page.active .mc { animation: slideUp 0.28s ease both; }
   .page.active .card { animation: slideUp 0.28s ease both; }
   .metrics-grid .mc:nth-child(1) { animation-delay: 0.02s; }
@@ -1267,8 +1303,8 @@
     </div>
 
     <div class="sidebar-farm">
-      <div class="farm-name">🍈 Kebun Melon Hidroponik</div>
-      <div class="farm-loc">1 Zona Aktif · Cucumis melo</div>
+      <div class="farm-name" id="farm-name">🍈 Kebun Melon Hidroponik</div>
+      <div class="farm-loc" id="farm-loc">1 Zona Aktif · Cucumis melo</div>
     </div>
   </div>
 
@@ -1348,57 +1384,57 @@
 
       <div class="two-col">
         <div class="card">
-          <div class="card-title">Zona Tanam Aktif</div>
+          <div class="card-title" id="ct-zona-aktif">Zona Tanam Aktif</div>
           <div style="display:flex;flex-direction:column;gap:12px">
             <div class="zone-card active" style="cursor:default;border-color:rgba(29,158,117,0.4)">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
                 <div class="zone-name" style="font-size:14px">🍈 Zona Utama — Melon Hidroponik</div>
-                <div class="zone-pill zp-ok" style="margin:0">● Normal</div>
+                <div class="zone-pill zp-ok" id="dash-zone-pill" style="margin:0">● Normal</div>
               </div>
-              <div class="zone-crop" style="margin-bottom:10px">Melon (Cucumis melo) · 1 zona aktif</div>
+              <div class="zone-crop" id="dash-zone-crop" style="margin-bottom:10px">Melon (Cucumis melo) · 1 zona aktif</div>
               <div class="zone-params" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-                <span class="zparam">Fase: <b>Vegetatif</b></span>
-                <span class="zparam">Hari ke-<b>32</b></span>
-                <span class="zparam">Panen <b>~28 hari</b></span>
+                <span class="zparam" id="dash-zparam-fase">Fase: <b>Vegetatif</b></span>
+                <span class="zparam" id="dash-zparam-hari">Hari ke-<b>32</b></span>
+                <span class="zparam" id="dash-zparam-panen">Panen <b>~28 hari</b></span>
               </div>
             </div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-              <div class="mini-stat"><div class="mini-stat-label">pH Optimal</div><div class="mini-stat-val">5.5–6.5</div></div>
-              <div class="mini-stat"><div class="mini-stat-label">TDS Optimal</div><div class="mini-stat-val" style="font-size:14px">1500–2500<span class="mini-stat-unit"> ppm</span></div></div>
-              <div class="mini-stat"><div class="mini-stat-label">Suhu Air</div><div class="mini-stat-val">18–26<span class="mini-stat-unit">°C</span></div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="lbl-ph-optimal">pH Optimal</div><div class="mini-stat-val">5.5–6.5</div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="lbl-tds-optimal">TDS Optimal</div><div class="mini-stat-val" style="font-size:14px">1500–2500<span class="mini-stat-unit"> ppm</span></div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="lbl-suhu-optimal">Suhu Air</div><div class="mini-stat-val">18–26<span class="mini-stat-unit">°C</span></div></div>
             </div>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title">Notifikasi Terbaru</div>
+          <div class="card-title" id="ct-notif-terbaru">Notifikasi Terbaru</div>
           <div class="alert-stack">
             <div class="alert-row ar-ok">
               <div class="ar-dot" style="background:#1D9E75"></div>
               <div>
-                <div class="ar-msg">Semua parameter sensor dalam batas normal</div>
-                <div class="ar-time">Baru saja</div>
+                <div class="ar-msg" id="static-notif-1">Semua parameter sensor dalam batas normal</div>
+                <div class="ar-time" id="static-notif-1-time">Baru saja</div>
               </div>
             </div>
             <div class="alert-row ar-info">
               <div class="ar-dot" style="background:#378ADD"></div>
               <div>
-                <div class="ar-msg">Melon memasuki fase vegetatif hari ke-32</div>
-                <div class="ar-time">1 jam lalu</div>
+                <div class="ar-msg" id="static-notif-2">Melon memasuki fase vegetatif hari ke-32</div>
+                <div class="ar-time" id="static-notif-2-time">1 jam lalu</div>
               </div>
             </div>
             <div class="alert-row ar-warn">
               <div class="ar-dot" style="background:#BA7517"></div>
               <div>
-                <div class="ar-msg">Cek kelembapan tanah — pastikan >40%</div>
-                <div class="ar-time">2 jam lalu</div>
+                <div class="ar-msg" id="static-notif-3">Cek kelembapan tanah — pastikan &gt;40%</div>
+                <div class="ar-time" id="static-notif-3-time">2 jam lalu</div>
               </div>
             </div>
             <div class="alert-row ar-ok">
               <div class="ar-dot" style="background:#1D9E75"></div>
               <div>
-                <div class="ar-msg">Jadwal irigasi pagi selesai (8 mnt)</div>
-                <div class="ar-time">32 menit lalu</div>
+                <div class="ar-msg" id="static-notif-4">Jadwal irigasi pagi selesai (8 mnt)</div>
+                <div class="ar-time" id="static-notif-4-time">32 menit lalu</div>
               </div>
             </div>
           </div>
@@ -1406,7 +1442,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Tren sensor real-time (ESP32 via MQTT)</div>
+        <div class="card-title" id="ct-tren-sensor">Tren sensor real-time (ESP32 via MQTT)</div>
         <div class="chart-legend">
           <span class="cl-item"><span class="cl-dot" style="background:#378ADD"></span>Suhu Air (°C)</span>
           <span class="cl-item"><span class="cl-dot" style="background:#E24B4A"></span>Suhu Ruangan (°C)</span>
@@ -1422,14 +1458,14 @@
     <div class="page" id="page-zones">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Zona Tanam Melon</div>
-          <div class="page-sub">1 zona aktif · sistem hidroponik · Cucumis melo</div>
+          <div class="page-title" id="pt-zones">Zona Tanam Melon</div>
+          <div class="page-sub" id="ps-zones">1 zona aktif · sistem hidroponik · Cucumis melo</div>
         </div>
       </div>
 
       <div class="gauge-grid">
         <div class="gauge-card">
-          <div class="gauge-label">Suhu Air</div>
+          <div class="gauge-label" id="gl-suhu-air">Suhu Air</div>
           <svg viewBox="0 0 110 70" width="120" style="display:block;margin:0 auto 2px">
             <path d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#1E281E" stroke-width="9" stroke-linecap="round"/>
             <path id="gauge-arc-suhu-air" d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#378ADD" stroke-width="9" stroke-linecap="round" stroke-dasharray="141.4" stroke-dashoffset="141.4" style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1),stroke 0.4s"/>
@@ -1439,7 +1475,7 @@
           <div class="gauge-val" id="zone-suhu-air">--<span class="gauge-unit">°C</span></div>
         </div>
         <div class="gauge-card">
-          <div class="gauge-label">pH Air</div>
+          <div class="gauge-label" id="gl-ph">pH Air</div>
           <svg viewBox="0 0 110 70" width="120" style="display:block;margin:0 auto 2px">
             <path d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#1E281E" stroke-width="9" stroke-linecap="round"/>
             <path id="gauge-arc-ph" d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#1D9E75" stroke-width="9" stroke-linecap="round" stroke-dasharray="141.4" stroke-dashoffset="141.4" style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1),stroke 0.4s"/>
@@ -1449,7 +1485,7 @@
           <div class="gauge-val" id="zone-ph">--<span class="gauge-unit"> pH</span></div>
         </div>
         <div class="gauge-card">
-          <div class="gauge-label">TDS Nutrisi</div>
+          <div class="gauge-label" id="gl-tds">TDS Nutrisi</div>
           <svg viewBox="0 0 110 70" width="120" style="display:block;margin:0 auto 2px">
             <path d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#1E281E" stroke-width="9" stroke-linecap="round"/>
             <path id="gauge-arc-tds" d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#BA7517" stroke-width="9" stroke-linecap="round" stroke-dasharray="141.4" stroke-dashoffset="141.4" style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1),stroke 0.4s"/>
@@ -1459,7 +1495,7 @@
           <div class="gauge-val" id="zone-tds">--<span class="gauge-unit"> ppm</span></div>
         </div>
         <div class="gauge-card">
-          <div class="gauge-label">Kelembapan Tanah</div>
+          <div class="gauge-label" id="gl-kelembapan">Kelembapan Tanah</div>
           <svg viewBox="0 0 110 70" width="120" style="display:block;margin:0 auto 2px">
             <path d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#1E281E" stroke-width="9" stroke-linecap="round"/>
             <path id="gauge-arc-kelembapan" d="M10 62 A45 45 0 0 1 100 62" fill="none" stroke="#7F77DD" stroke-width="9" stroke-linecap="round" stroke-dasharray="141.4" stroke-dashoffset="141.4" style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1),stroke 0.4s"/>
@@ -1471,21 +1507,21 @@
       </div>
 
       <div class="card">
-        <div class="card-title">🍈 Zona Utama — Melon Hidroponik (Cucumis melo)</div>
+        <div class="card-title" id="ct-zona-utama">🍈 Zona Utama — Melon Hidroponik (Cucumis melo)</div>
         <div class="resp-2fr-1fr" style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
           <div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
-              <div class="mini-stat"><div class="mini-stat-label">Suhu Air</div><div class="mini-stat-val" id="zm-suhu-air">--<span class="mini-stat-unit">°C</span></div></div>
-              <div class="mini-stat"><div class="mini-stat-label">Suhu Ruangan</div><div class="mini-stat-val" id="zm-suhu-ruang">--<span class="mini-stat-unit">°C</span></div></div>
-              <div class="mini-stat"><div class="mini-stat-label">pH Air</div><div class="mini-stat-val" id="zm-ph">--</div></div>
-              <div class="mini-stat"><div class="mini-stat-label">TDS</div><div class="mini-stat-val" id="zm-tds">--<span class="mini-stat-unit"> ppm</span></div></div>
-              <div class="mini-stat"><div class="mini-stat-label">Kelembapan</div><div class="mini-stat-val" id="zm-kelembapan">--<span class="mini-stat-unit">%</span></div></div>
-              <div class="mini-stat" style="background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2)"><div class="mini-stat-label" style="color:var(--accent)">Status</div><div class="mini-stat-val" style="font-size:13px;color:#5DCAA5" id="zm-status">Menunggu...</div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="zm-lbl-suhu-air">Suhu Air</div><div class="mini-stat-val" id="zm-suhu-air">--<span class="mini-stat-unit">°C</span></div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="zm-lbl-suhu-ruang">Suhu Ruangan</div><div class="mini-stat-val" id="zm-suhu-ruang">--<span class="mini-stat-unit">°C</span></div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="zm-lbl-ph">pH Air</div><div class="mini-stat-val" id="zm-ph">--</div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="zm-lbl-tds">TDS</div><div class="mini-stat-val" id="zm-tds">--<span class="mini-stat-unit"> ppm</span></div></div>
+              <div class="mini-stat"><div class="mini-stat-label" id="zm-lbl-kelembapan">Kelembapan</div><div class="mini-stat-val" id="zm-kelembapan">--<span class="mini-stat-unit">%</span></div></div>
+              <div class="mini-stat" style="background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2)"><div class="mini-stat-label" id="zm-lbl-status" style="color:var(--accent)">Status</div><div class="mini-stat-val" style="font-size:13px;color:#5DCAA5" id="zm-status">Menunggu...</div></div>
             </div>
             <div class="zone-pill zp-ok" id="zm-pill">● Menunggu data sensor...</div>
           </div>
           <div>
-            <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;margin-bottom:10px">Fase Pertumbuhan</div>
+            <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;margin-bottom:10px" id="lbl-fase-pertumbuhan">Fase Pertumbuhan</div>
             <div style="display:flex;flex-direction:column;gap:6px" id="zona-fase-list">
               <!-- diisi dinamis oleh renderZonaFase() -->
               <div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono);padding:8px 0">Isi tanggal mulai di halaman Panen untuk melihat fase aktif.</div>
@@ -1495,18 +1531,75 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Parameter optimal melon per fase</div>
-        <div style="overflow-x:auto">
-          <table class="data-table" id="tabel-parameter-fase">
-            <thead><tr><th>Fase</th><th>pH</th><th>TDS (ppm)</th><th>Suhu Air</th><th>Kelembapan</th><th>Catatan</th></tr></thead>
-            <tbody>
-              <tr data-fase="semai"><td>Semai (1–10 hr)</td><td>5.8–6.2</td><td>400–600</td><td>22–26°C</td><td>70–80%</td><td style="color:var(--text-secondary)">Larutan nutrisi encer, cahaya sedang 8–10 jam/hari. Fokus perkecambahan akar, hindari larutan terlalu pekat agar bibit tidak stres.</td></tr>
-              <tr data-fase="vegetatif"><td>Vegetatif (11–40 hr)</td><td>5.5–6.5</td><td>1500–2000</td><td>20–26°C</td><td>60–70%</td><td style="color:var(--text-secondary)">Tingkatkan N (Nitrogen) — unsur utama pembentuk daun, batang, dan klorofil. Pastikan drainase lancar agar akar tidak busuk.</td></tr>
-              <tr data-fase="pembungaan"><td>Pembungaan (41–55 hr)</td><td>5.5–6.0</td><td>1800–2200</td><td>20–25°C</td><td>55–65%</td><td style="color:var(--text-secondary)">Kurangi N (Nitrogen) agar pertumbuhan vegetatif melambat. Tingkatkan P (Fosfor) untuk merangsang pembungaan, dan K (Kalium) untuk memperkuat tangkai bunga.</td></tr>
-              <tr data-fase="pembuahan"><td>Pembuahan (56–85 hr)</td><td>5.5–6.2</td><td>2000–2500</td><td>18–24°C</td><td>50–60%</td><td style="color:var(--text-secondary)">Tingkatkan K (Kalium) untuk memperbesar buah, meningkatkan rasa manis, dan ketahanan simpan. Batasi N agar buah tidak berair berlebihan. Jaga suhu stabil 18–24°C.</td></tr>
-              <tr data-fase="panen"><td>Panen (85 hr)</td><td>5.5–6.5</td><td>1800–2000</td><td>18–26°C</td><td>50–60%</td><td style="color:var(--text-secondary)">Kurangi air 7 hari sebelum panen untuk meningkatkan kadar gula (Brix). Hentikan nutrisi 2–3 hari sebelum panen agar rasa lebih manis dan aroma optimal.</td></tr>
-            </tbody>
-          </table>
+        <div class="card-title" id="ct-param-optimal">Parameter Optimal Melon per Fase</div>
+        <div class="fase-param-list" id="tabel-parameter-fase">
+
+          <div class="fase-param-item" data-fase="semai">
+            <div class="fpi-head">
+              <span class="fpi-name" id="fp-semai-name">Semai (Hari 1–10)</span>
+            </div>
+            <div class="fpi-stats">
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-ph-1">pH</span><span class="fpi-stat-val">5.8–6.2</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-tds-1">TDS (ppm)</span><span class="fpi-stat-val">400–600</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-suhu-1">Suhu Air</span><span class="fpi-stat-val">22–26°C</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-kel-1">Kelembapan</span><span class="fpi-stat-val">70–80%</span></div>
+            </div>
+            <p class="fpi-note" id="fp-note-1">Gunakan larutan nutrisi encer dengan intensitas cahaya sedang selama 8–10 jam per hari. Fokus utama pada fase ini adalah perkecambahan akar — hindari larutan yang terlalu pekat agar bibit tidak mengalami stres.</p>
+          </div>
+
+          <div class="fase-param-item" data-fase="vegetatif">
+            <div class="fpi-head">
+              <span class="fpi-name" id="fp-vegetatif-name">Vegetatif (Hari 11–40)</span>
+            </div>
+            <div class="fpi-stats">
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-ph-2">pH</span><span class="fpi-stat-val">5.5–6.5</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-tds-2">TDS (ppm)</span><span class="fpi-stat-val">1500–2000</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-suhu-2">Suhu Air</span><span class="fpi-stat-val">20–26°C</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-kel-2">Kelembapan</span><span class="fpi-stat-val">60–70%</span></div>
+            </div>
+            <p class="fpi-note" id="fp-note-2">Tingkatkan kadar Nitrogen (N) sebagai unsur utama pembentuk daun, batang, dan klorofil. Pastikan sistem drainase berjalan lancar agar akar tidak mengalami pembusukan akibat genangan air.</p>
+          </div>
+
+          <div class="fase-param-item" data-fase="pembungaan">
+            <div class="fpi-head">
+              <span class="fpi-name" id="fp-pembungaan-name">Pembungaan (Hari 41–55)</span>
+            </div>
+            <div class="fpi-stats">
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-ph-3">pH</span><span class="fpi-stat-val">5.5–6.0</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-tds-3">TDS (ppm)</span><span class="fpi-stat-val">1800–2200</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-suhu-3">Suhu Air</span><span class="fpi-stat-val">20–25°C</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-kel-3">Kelembapan</span><span class="fpi-stat-val">55–65%</span></div>
+            </div>
+            <p class="fpi-note" id="fp-note-3">Kurangi kadar Nitrogen (N) agar pertumbuhan vegetatif melambat. Tingkatkan Fosfor (P) untuk merangsang pembentukan bunga, serta Kalium (K) untuk memperkuat tangkai dan kualitas bunga.</p>
+          </div>
+
+          <div class="fase-param-item" data-fase="pembuahan">
+            <div class="fpi-head">
+              <span class="fpi-name" id="fp-pembuahan-name">Pembuahan (Hari 56–85)</span>
+            </div>
+            <div class="fpi-stats">
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-ph-4">pH</span><span class="fpi-stat-val">5.5–6.2</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-tds-4">TDS (ppm)</span><span class="fpi-stat-val">2000–2500</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-suhu-4">Suhu Air</span><span class="fpi-stat-val">18–24°C</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-kel-4">Kelembapan</span><span class="fpi-stat-val">50–60%</span></div>
+            </div>
+            <p class="fpi-note" id="fp-note-4">Tingkatkan kadar Kalium (K) untuk memperbesar ukuran buah, meningkatkan rasa manis, dan memperpanjang daya simpan. Batasi Nitrogen agar buah tidak terlalu berair, serta jaga kestabilan suhu pada kisaran 18–24°C.</p>
+          </div>
+
+          <div class="fase-param-item active" data-fase="panen">
+            <div class="fpi-head">
+              <span class="fpi-name" id="fp-panen-name">Panen (Hari ke-85)</span>
+              <span class="fpi-active-badge" id="fp-active-badge">Fase Saat Ini</span>
+            </div>
+            <div class="fpi-stats">
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-ph-5">pH</span><span class="fpi-stat-val">5.5–6.5</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-tds-5">TDS (ppm)</span><span class="fpi-stat-val">1800–2000</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-suhu-5">Suhu Air</span><span class="fpi-stat-val">18–26°C</span></div>
+              <div class="fpi-stat"><span class="fpi-stat-lbl" id="fp-lbl-kel-5">Kelembapan</span><span class="fpi-stat-val">50–60%</span></div>
+            </div>
+            <p class="fpi-note" id="fp-note-5">Kurangi pemberian air mulai 7 hari sebelum panen untuk meningkatkan kadar gula buah (Brix). Hentikan pemberian nutrisi 2–3 hari sebelum panen agar rasa lebih manis dan aroma buah lebih optimal.</p>
+          </div>
+
         </div>
       </div>
     </div>
@@ -1515,14 +1608,14 @@
     <div class="page" id="page-sensors">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Monitor Sensor ESP32</div>
-          <div class="page-sub">5 sensor aktif · data real-time via MQTT</div>
+          <div class="page-title" id="pt-sensors">Monitor Sensor ESP32</div>
+          <div class="page-sub" id="ps-sensors">5 sensor aktif · data real-time via MQTT</div>
         </div>
       </div>
 
       <div class="sensor-metrics">
         <div class="mc">
-          <div class="mc-top"><span class="mc-label">Suhu Air</span>
+          <div class="mc-top"><span class="mc-label" id="slbl-suhu-air">Suhu Air</span>
             <div class="mc-ico" style="background:rgba(55,138,221,0.15)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#378ADD"><path d="M8 1a2 2 0 00-2 2v6a3 3 0 104 0V3a2 2 0 00-2-2z"/></svg>
             </div>
@@ -1531,7 +1624,7 @@
           <div class="mc-trend" id="s-suhu-air-status">menunggu...</div>
         </div>
         <div class="mc">
-          <div class="mc-top"><span class="mc-label">Suhu Ruangan</span>
+          <div class="mc-top"><span class="mc-label" id="slbl-suhu-ruang">Suhu Ruangan</span>
             <div class="mc-ico" style="background:rgba(226,75,74,0.12)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#E24B4A"><path d="M8 1a2 2 0 00-2 2v6a3 3 0 104 0V3a2 2 0 00-2-2z"/></svg>
             </div>
@@ -1540,7 +1633,7 @@
           <div class="mc-trend" id="s-suhu-ruang-status">menunggu...</div>
         </div>
         <div class="mc">
-          <div class="mc-top"><span class="mc-label">pH Air</span>
+          <div class="mc-top"><span class="mc-label" id="slbl-ph">pH Air</span>
             <div class="mc-ico" style="background:rgba(29,158,117,0.15)">
               <svg width="14" height="14" viewBox="0 0 14 14"><text x="0" y="11" font-size="9" font-weight="700" fill="#1D9E75">pH</text></svg>
             </div>
@@ -1549,7 +1642,7 @@
           <div class="mc-trend" id="s-ph-status">menunggu...</div>
         </div>
         <div class="mc">
-          <div class="mc-top"><span class="mc-label">TDS / Nutrisi</span>
+          <div class="mc-top"><span class="mc-label" id="slbl-tds">TDS / Nutrisi</span>
             <div class="mc-ico" style="background:rgba(186,117,23,0.15)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#BA7517"><path d="M8 2C6 5 4 7 4 10a4 4 0 008 0c0-3-2-5-4-8z"/></svg>
             </div>
@@ -1558,7 +1651,7 @@
           <div class="mc-trend" id="s-tds-status">menunggu...</div>
         </div>
         <div class="mc">
-          <div class="mc-top"><span class="mc-label">Kelembapan Tanah</span>
+          <div class="mc-top"><span class="mc-label" id="slbl-kelembapan">Kelembapan Tanah</span>
             <div class="mc-ico" style="background:rgba(127,119,221,0.15)">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="#7F77DD"><path d="M8 2C6 5 4 7 4 10a4 4 0 008 0c0-3-2-5-4-8z"/></svg>
             </div>
@@ -1569,7 +1662,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Status sensor ESP32 · iot/soccer/sensor</div>
+        <div class="card-title" id="ct-sensor-status">Status sensor ESP32 · iot/soccer/sensor</div>
         <div style="overflow-x:auto">
           <table class="data-table">
             <thead>
@@ -1587,7 +1680,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Grafik real-time sensor</div>
+        <div class="card-title" id="ct-grafik-sensor">Grafik real-time sensor</div>
         <div class="chart-legend">
           <span class="cl-item"><span class="cl-dot" style="background:#378ADD"></span>Suhu Air</span>
           <span class="cl-item"><span class="cl-dot" style="background:#E24B4A"></span>Suhu Ruangan</span>
@@ -1604,8 +1697,8 @@
     <div class="page" id="page-pumps">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Pompa & Irigasi</div>
-          <div class="page-sub">Kontrol manual dan jadwal otomatis</div>
+          <div class="page-title" id="pt-pumps">Pompa & Irigasi</div>
+          <div class="page-sub" id="ps-pumps">Kontrol manual dan jadwal otomatis</div>
         </div>
       </div>
 
@@ -1646,7 +1739,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Jadwal irigasi hari ini</div>
+        <div class="card-title" id="ct-jadwal-irigasi">Jadwal irigasi hari ini</div>
         <div class="sch-list" id="schedule-list">
           <!-- diisi oleh JS renderSchedule() -->
         </div>
@@ -1657,13 +1750,13 @@
     <div class="page" id="page-analytics">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Grafik & Tren</div>
-          <div class="page-sub">Analitik 7 hari terakhir</div>
+          <div class="page-title" id="pt-analytics">Grafik & Tren</div>
+          <div class="page-sub" id="ps-analytics">Analitik 7 hari terakhir</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">pH harian — Zona A</div>
+        <div class="card-title" id="ct-ph-harian">pH harian — Zona A</div>
         <div class="chart-legend">
           <span class="cl-item"><span class="cl-dot" style="background:#378ADD"></span>Rata-rata pH harian (akumulasi per jam ÷ 24)</span>
         </div>
@@ -1673,17 +1766,17 @@
 
       <div class="two-equal">
         <div class="card">
-          <div class="card-title">Konsumsi air (L/hari)</div>
+          <div class="card-title" id="ct-konsumsi-air">Konsumsi air (L/hari)</div>
           <div class="chart-wrap" style="height:180px"><canvas id="waterChart"></canvas></div>
         </div>
         <div class="card">
-          <div class="card-title">Konsumsi nutrisi (ppm avg/hari)</div>
+          <div class="card-title" id="ct-konsumsi-nutrisi">Konsumsi nutrisi (ppm avg/hari)</div>
           <div class="chart-wrap" style="height:180px"><canvas id="nutChart"></canvas></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">Produksi biomassa (g/hari estimasi)</div>
+        <div class="card-title" id="ct-biomassa">Produksi biomassa (g/hari estimasi)</div>
         <div class="chart-wrap" style="height:180px"><canvas id="bioChart"></canvas></div>
       </div>
     </div>
@@ -1692,14 +1785,14 @@
     <div class="page" id="page-harvest">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Catatan Panen Melon</div>
-          <div class="page-sub">Riwayat dan proyeksi panen · Cucumis melo hidroponik</div>
+          <div class="page-title" id="pt-harvest">Catatan Panen Melon</div>
+          <div class="page-sub" id="ps-harvest">Riwayat dan proyeksi panen · Cucumis melo hidroponik</div>
         </div>
       </div>
 
       <!-- Harvest Date Input Card -->
       <div class="card" id="harvest-date-card" style="margin-bottom:16px">
-        <div class="card-title">Periode Panen</div>
+        <div class="card-title" id="ct-periode-panen">Periode Panen</div>
         <div id="harvest-locked-view" style="display:none">
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">
             <div style="background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.25);border-radius:var(--r-md);padding:10px 14px">
@@ -1780,7 +1873,7 @@
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
         <div class="card">
-          <div class="card-title">Progress panen saat ini</div>
+          <div class="card-title" id="ct-progress-panen">Progress panen saat ini</div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div>
               <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
@@ -1815,7 +1908,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Riwayat panen melon</div>
+        <div class="card-title" id="ct-riwayat-panen">Riwayat panen melon</div>
         <div style="overflow-x:auto">
           <table class="data-table">
             <thead><tr><th>Tanggal</th><th>Varietas</th><th>Jumlah Buah</th><th>Total Berat</th><th>Rata-rata/buah</th><th>Kualitas</th><th>Keterangan</th></tr></thead>
@@ -1835,7 +1928,7 @@
     <div class="page" id="page-weather">
       <div class="page-hdr">
         <div>
-          <div class="page-title">Cuaca & Lingkungan</div>
+          <div class="page-title" id="pt-weather">Cuaca & Lingkungan</div>
           <div class="page-sub" id="weather-sub">Cari kota untuk melihat cuaca real-time</div>
         </div>
       </div>
@@ -1872,12 +1965,12 @@
         <div id="weather-cards" class="weather-row"></div>
 
         <div class="card">
-          <div class="card-title">Rekomendasi untuk kebun melon</div>
+          <div class="card-title" id="ct-rekomendasi-cuaca">Rekomendasi untuk kebun melon</div>
           <div id="weather-rekom" class="alert-stack"></div>
         </div>
 
         <div class="card">
-          <div class="card-title">Suhu udara 7 hari ke depan</div>
+          <div class="card-title" id="ct-prakiraan-suhu">Suhu udara 7 hari ke depan</div>
           <div class="chart-legend">
             <span class="cl-item"><span class="cl-dot" style="background:#E24B4A"></span>Suhu max (°C)</span>
             <span class="cl-item"><span class="cl-dot" style="background:#378ADD"></span>Suhu min (°C)</span>
@@ -1919,11 +2012,11 @@
         <!-- BATAS pH -->
         <div class="card">
           <div class="card-title" style="display:flex;align-items:center;gap:8px">
-            Batas pH
+            <span id="ct-batas-ph">Batas pH</span>
             <span class="sync-badge idle" id="ph-sync-badge">Belum dikirim</span>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">pH minimum</div><div class="setting-sub">Peringatan di bawah nilai ini</div></div>
+            <div><div class="setting-label" id="lbl-set-ph-min">pH Minimum</div><div class="setting-sub" id="sub-set-ph-min">Notifikasi terkirim apabila nilai pH berada di bawah ambang batas ini</div></div>
             <div class="setting-ctrl">
               <input type="range" id="set-ph-min" min="4" max="6" step="0.1" value="5.5"
                 oninput="this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1);autoKirimPH()">
@@ -1931,7 +2024,7 @@
             </div>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">pH maksimum</div><div class="setting-sub">Peringatan di atas nilai ini</div></div>
+            <div><div class="setting-label" id="lbl-set-ph-max">pH Maksimum</div><div class="setting-sub" id="sub-set-ph-max">Notifikasi terkirim apabila nilai pH melampaui ambang batas ini</div></div>
             <div class="setting-ctrl">
               <input type="range" id="set-ph-max" min="6" max="8" step="0.1" value="6.5"
                 oninput="this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1);autoKirimPH()">
@@ -1939,7 +2032,7 @@
             </div>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Mode hemat energi</div><div class="setting-sub">Kurangi 30% daya pukul 22:00–05:00</div></div>
+            <div><div class="setting-label" id="lbl-set-hemat">Mode Hemat Energi</div><div class="setting-sub" id="sub-set-hemat">Mengurangi konsumsi daya sebesar 30% pada pukul 22:00–05:00</div></div>
             <button class="toggle off" id="a3" onclick="toggleSwitch('a3',null);autoKirimOtomasi('HEMAT_ENERGI','a3')"></button>
           </div>
           <div class="card-send-row">
@@ -1951,11 +2044,11 @@
         <!-- BATAS TDS -->
         <div class="card">
           <div class="card-title" style="display:flex;align-items:center;gap:8px">
-            Batas TDS Nutrisi
+            <span id="ct-batas-tds">Batas TDS Nutrisi</span>
             <span class="sync-badge idle" id="tds-sync-badge">Belum dikirim</span>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">TDS minimum (ppm)</div><div class="setting-sub">Peringatan konsentrasi nutrisi terlalu encer</div></div>
+            <div><div class="setting-label" id="lbl-set-tds-min">TDS Minimum (ppm)</div><div class="setting-sub" id="sub-set-tds-min">Notifikasi terkirim apabila konsentrasi nutrisi terlalu encer</div></div>
             <div class="setting-ctrl">
               <input type="range" id="set-tds-min" min="200" max="1500" step="50" value="800"
                 oninput="this.nextElementSibling.textContent=this.value;autoKirimTDS()">
@@ -1963,7 +2056,7 @@
             </div>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">TDS maksimum (ppm)</div><div class="setting-sub">Peringatan konsentrasi nutrisi terlalu pekat</div></div>
+            <div><div class="setting-label" id="lbl-set-tds-max">TDS Maksimum (ppm)</div><div class="setting-sub" id="sub-set-tds-max">Notifikasi terkirim apabila konsentrasi nutrisi terlalu pekat</div></div>
             <div class="setting-ctrl">
               <input type="range" id="set-tds-max" min="1000" max="3000" step="50" value="1600"
                 oninput="this.nextElementSibling.textContent=this.value;autoKirimTDS()">
@@ -1977,28 +2070,28 @@
 
         <!-- NOTIFIKASI CARD -->
         <div class="card">
-          <div class="card-title">Notifikasi</div>
+          <div class="card-title" id="ct-notif-settings">Notifikasi</div>
           <div class="setting-row" style="margin-bottom:8px">
             <div style="flex:1">
-              <div class="setting-label">Nomor WhatsApp (CallMeBot)</div>
-              <div class="setting-sub">Format: +628xxx · <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" style="color:var(--accent)">Daftar API Key</a></div>
+              <div class="setting-label" id="lbl-wa-number">Nomor WhatsApp (CallMeBot)</div>
+              <div class="setting-sub"><span id="sub-wa-number">Format: +628xxx</span> · <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" style="color:var(--accent)" id="link-api-key">Daftar API Key</a></div>
             </div>
           </div>
           <div style="display:flex;gap:8px;margin-bottom:12px">
             <input type="text" id="wa-number" placeholder="+628123456789" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;color:var(--text-primary);font-size:12px;font-family:var(--font-mono)">
             <input type="text" id="wa-apikey" placeholder="API Key" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;color:var(--text-primary);font-size:12px;font-family:var(--font-mono)">
-            <button onclick="testWA()" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:6px 12px;font-size:11px;cursor:pointer">Test</button>
+            <button onclick="testWA()" id="btn-test-wa" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:6px 12px;font-size:11px;cursor:pointer">Test</button>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Alert pH &amp; suhu</div><div class="setting-sub">Kirim notifikasi saat melebihi batas</div></div>
+            <div><div class="setting-label" id="lbl-alert-ph-suhu">Peringatan pH &amp; Suhu</div><div class="setting-sub" id="sub-alert-ph-suhu">Kirim notifikasi otomatis saat nilai melebihi ambang batas</div></div>
             <button class="toggle on" id="n1" onclick="toggleSwitch('n1',null)"></button>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Estimasi panen</div><div class="setting-sub">Ingatkan 5 hari sebelum panen</div></div>
+            <div><div class="setting-label" id="lbl-estimasi-panen">Estimasi Panen</div><div class="setting-sub" id="sub-estimasi-panen">Pengingat otomatis 5 hari sebelum jadwal panen</div></div>
             <button class="toggle on" id="n2" onclick="toggleSwitch('n2',null)"></button>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Laporan harian</div><div class="setting-sub">Ringkasan pukul 20:00 setiap hari</div></div>
+            <div><div class="setting-label" id="lbl-laporan-harian">Laporan Harian</div><div class="setting-sub" id="sub-laporan-harian">Ringkasan kondisi kebun dikirim setiap pukul 20:00</div></div>
             <button class="toggle off" id="n3" onclick="toggleSwitch('n3',null)"></button>
           </div>
         </div>
@@ -2007,11 +2100,11 @@
         <!-- BATAS SUHU -->
         <div class="card">
           <div class="card-title" style="display:flex;align-items:center;gap:8px">
-            Batas Suhu Air
+            <span id="ct-batas-suhu">Batas Suhu Air</span>
             <span class="sync-badge idle" id="suhu-sync-badge">Belum dikirim</span>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Suhu minimum (°C)</div><div class="setting-sub">Peringatan suhu terlalu rendah</div></div>
+            <div><div class="setting-label" id="lbl-set-suhu-min">Suhu Minimum (°C)</div><div class="setting-sub" id="sub-set-suhu-min">Notifikasi terkirim apabila suhu air terlalu rendah</div></div>
             <div class="setting-ctrl">
               <input type="range" id="set-suhu-min" min="10" max="22" step="1" value="18"
                 oninput="this.nextElementSibling.textContent=this.value+'°C';autoKirimSuhu()">
@@ -2019,7 +2112,7 @@
             </div>
           </div>
           <div class="setting-row">
-            <div><div class="setting-label">Suhu maksimum (°C)</div><div class="setting-sub">Peringatan suhu terlalu tinggi</div></div>
+            <div><div class="setting-label" id="lbl-set-suhu-max">Suhu Maksimum (°C)</div><div class="setting-sub" id="sub-set-suhu-max">Notifikasi terkirim apabila suhu air terlalu tinggi</div></div>
             <div class="setting-ctrl">
               <input type="range" id="set-suhu-max" min="24" max="35" step="1" value="26"
                 oninput="this.nextElementSibling.textContent=this.value+'°C';autoKirimSuhu()">
@@ -2033,15 +2126,19 @@
 
         <!-- BAHASA / LANGUAGE -->
         <div class="card">
-          <div class="card-title">Bahasa / Language</div>
-          <div class="setting-row">
+          <div class="card-title" id="ct-bahasa">Bahasa / Language</div>
+          <div class="setting-row" style="align-items:flex-start">
             <div>
               <div class="setting-label" id="lang-label-title">Pilih Bahasa</div>
               <div class="setting-sub" id="lang-label-sub">Ubah tampilan teks dashboard</div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <button id="lang-id" onclick="setLang('id')" style="padding:6px 18px;border-radius:6px;border:1px solid var(--accent);background:rgba(29,158,117,0.15);color:var(--accent);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500">🇮🇩 Indonesia</button>
-              <button id="lang-en" onclick="setLang('en')" style="padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500">🇬🇧 English</button>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;max-width:380px;justify-content:flex-end">
+              <button id="lang-id" onclick="setLang('id')" class="lang-btn active-lang">🇮🇩 Indonesia</button>
+              <button id="lang-en" onclick="setLang('en')" class="lang-btn">🇬🇧 English</button>
+              <button id="lang-ms" onclick="setLang('ms')" class="lang-btn">🇲🇾 Melayu</button>
+              <button id="lang-zh" onclick="setLang('zh')" class="lang-btn">🇨🇳 中文</button>
+              <button id="lang-ja" onclick="setLang('ja')" class="lang-btn">🇯🇵 日本語</button>
+              <button id="lang-ar" onclick="setLang('ar')" class="lang-btn">🇸🇦 العربية</button>
             </div>
           </div>
           <div class="card-send-row">
@@ -2120,7 +2217,7 @@ function toggleSwitch(id, statId) {
     const statusEl = document.getElementById('auto-status');
     if (statusEl) statusEl.textContent = ok
       ? '✓ ' + autoKey + ' → ' + (newState ? 'AKTIF' : 'MATI') + ' dikirim ke ESP32'
-      : '✗ MQTT belum terhubung';
+      : (LANG[currentLang]||LANG.id).notSent;
     console.log('[AUTO]', cmd, ok ? '→ terkirim' : '→ MQTT belum terhubung');
     return;
   }
@@ -2184,10 +2281,10 @@ function kirimPH() {
   const st = document.getElementById('ph-send-status');
   if (ok) {
     markSynced('ph', now);
-    if (st) st.textContent = '✓ Terkirim ' + now;
-    addNotif('info', 'Batas pH dikirim ke ESP32', `pH min: ${phMin}, max: ${phMax}`);
+    const L1=LANG[currentLang]||LANG.id; if (st) st.textContent = L1.sentAt+' '+now;
+    addNotif('info', L1.notifBatasPhSent, t(L1.notifBatasPhDetail, phMin, phMax));
   } else {
-    if (st) st.textContent = '✗ MQTT belum terhubung';
+    if (st) st.textContent = (LANG[currentLang]||LANG.id).notSent;
     markDirty('ph');
   }
 }
@@ -2205,10 +2302,10 @@ function kirimTDS() {
   const st = document.getElementById('tds-send-status');
   if (ok) {
     markSynced('tds', now);
-    if (st) st.textContent = '✓ Terkirim ' + now;
-    addNotif('info', 'Batas TDS dikirim ke ESP32', `TDS min: ${tdsMin} ppm, max: ${tdsMax} ppm`);
+    const L2=LANG[currentLang]||LANG.id; if (st) st.textContent = L2.sentAt+' '+now;
+    addNotif('info', L2.notifBatasTdsSent, t(L2.notifBatasTdsDetail, tdsMin, tdsMax));
   } else {
-    if (st) st.textContent = '✗ MQTT belum terhubung';
+    if (st) st.textContent = (LANG[currentLang]||LANG.id).notSent;
     markDirty('tds');
   }
 }
@@ -2226,10 +2323,10 @@ function kirimSuhu() {
   const st = document.getElementById('suhu-send-status');
   if (ok) {
     markSynced('suhu', now);
-    if (st) st.textContent = '✓ Terkirim ' + now;
-    addNotif('info', 'Batas suhu dikirim ke ESP32', `Suhu min: ${suhuMin}°C, max: ${suhuMax}°C`);
+    const L3=LANG[currentLang]||LANG.id; if (st) st.textContent = L3.sentAt+' '+now;
+    addNotif('info', L3.notifBatasSuhuSent, t(L3.notifBatasSuhuDetail, suhuMin, suhuMax));
   } else {
-    if (st) st.textContent = '✗ MQTT belum terhubung';
+    if (st) st.textContent = (LANG[currentLang]||LANG.id).notSent;
     markDirty('suhu');
   }
 }
@@ -2248,10 +2345,10 @@ function kirimOtomasi() {
   const now = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit'});
   const st = document.getElementById('auto-status');
   if (allOk) {
-    if (st) st.textContent = '✓ Terkirim ' + now;
-    addNotif('info', 'Pengaturan hemat energi dikirim ke ESP32', Object.entries(state).map(([k,v])=>k+':'+(v?'ON':'OFF')).join(', '));
+    const L4=LANG[currentLang]||LANG.id; if (st) st.textContent = L4.sentAt+' '+now;
+    addNotif('info', L4.notifHematSent, Object.entries(state).map(([k,v])=>k+':'+(v?'ON':'OFF')).join(', '));
   } else {
-    if (st) st.textContent = '✗ MQTT belum terhubung';
+    if (st) st.textContent = (LANG[currentLang]||LANG.id).notSent;
   }
 }
 
@@ -2261,7 +2358,7 @@ function autoKirimSuhu() {
   markDirty("suhu");
   clearTimeout(_debSuhu);
   const st = document.getElementById("suhu-send-status");
-  if (st) st.textContent = "Mengirim...";
+  if (st) st.textContent = (LANG[currentLang]||LANG.id).sending;
   _debSuhu = setTimeout(() => kirimSuhu(), 800);
 }
 
@@ -2272,7 +2369,7 @@ function autoKirimPH() {
   markDirty('ph');
   clearTimeout(_debPH);
   const st = document.getElementById('ph-send-status');
-  if (st) st.textContent = '⏳ Mengirim...';
+  if (st) st.textContent = '⏳ ' + (LANG[currentLang]||LANG.id).sending;
   _debPH = setTimeout(() => kirimPH(), 800);
 }
 
@@ -2280,7 +2377,7 @@ function autoKirimTDS() {
   markDirty('tds');
   clearTimeout(_debTDS);
   const st = document.getElementById('tds-send-status');
-  if (st) st.textContent = '⏳ Mengirim...';
+  if (st) st.textContent = '⏳ ' + (LANG[currentLang]||LANG.id).sending;
   _debTDS = setTimeout(() => kirimTDS(), 800);
 }
 
@@ -2294,9 +2391,9 @@ function autoKirimOtomasi(key, btnId) {
   if (ok) {
     markSynced('oto', now);
     if (st) st.textContent = '✓ AUTO_' + key.replace('AUTO_','') + ' → ' + (isOn ? 'NYALA' : 'MATI') + ' · ' + now;
-    addNotif('info', 'Otomasi diperbarui', key + ': ' + (isOn ? 'ON' : 'OFF'));
+    const L5=LANG[currentLang]||LANG.id; addNotif('info', L5.notifOtomasiUpdated, key + ': ' + (isOn ? 'ON' : 'OFF'));
   } else {
-    if (st) st.textContent = '✗ MQTT belum terhubung';
+    if (st) st.textContent = (LANG[currentLang]||LANG.id).notSent;
     markDirty('oto');
   }
 }
@@ -2346,83 +2443,581 @@ async function sendWhatsApp(msg) {
 const THRESHOLDS = { phMin: 5.5, phMax: 6.5, suhuMin: 18, suhuMax: 26, tdsMin: 800, tdsMax: 1600 };
 
 /* ══════════════════════════════════════════════════════
-   SISTEM BAHASA (i18n)
+   SISTEM BAHASA (i18n) — 6 Bahasa
    ══════════════════════════════════════════════════════ */
 const LANG = {
   id: {
-    // Topbar
     mqttStatus: 'MQTT terhubung · live',
-    // Sidebar
-    utama: 'UTAMA', analitik: 'ANALITIK', sistem: 'SISTEM',
+    grpUtama: 'UTAMA', grpAnalitik: 'ANALITIK', grpSistem: 'SISTEM',
     navDashboard: 'Dashboard', navZona: 'Zona Tanam', navSensor: 'Sensor',
     navPompa: 'Pompa & Irigasi', navGrafik: 'Grafik & Tren', navPanen: 'Panen',
     navCuaca: 'Cuaca', navNotif: 'Notifikasi', navPengaturan: 'Pengaturan',
-    // Dashboard
-    dashTitle: 'Dashboard Utama',
-    refreshBtn: 'Refresh data',
-    // Sensor cards
-    suhuAirLabel: 'SUHU AIR', suhuRuangLabel: 'SUHU RUANGAN',
-    phLabel: 'PH AIR', tdsLabel: 'TDS / NUTRISI', kelembapanLabel: 'KELEMBAPAN TANAH',
-    // Notifications page
-    notifTitle: 'Notifikasi',
-    markAllRead: 'Tandai semua dibaca',
-    deleteAll: 'Hapus semua',
-    noNotif: 'Tidak ada notifikasi',
-    // Settings
+    bnDashboard: 'Beranda', bnSensor: 'Sensor', bnPompa: 'Pompa',
+    bnPanen: 'Panen', bnNotif: 'Notif', bnLainnya: 'Lainnya',
+    farmName: '🍈 Kebun Melon Hidroponik', farmLoc: '1 Zona Aktif · Cucumis melo',
+    dashTitle: 'Dashboard Utama', refreshBtn: 'Refresh data',
+    suhuAir: 'SUHU AIR', suhuRuang: 'SUHU RUANGAN', phAir: 'PH AIR',
+    tdsNutrisi: 'TDS / NUTRISI', kelembapan: 'KELEMBAPAN TANAH',
+    zonaAktif: 'Zona Tanam Aktif', notifTerbaru: 'Notifikasi Terbaru',
+    trenSensor: 'Tren sensor real-time (ESP32 via MQTT)',
+    dashZonePill: '● Normal', dashZoneCrop: 'Melon (Cucumis melo) · 1 zona aktif',
+    dashFase: 'Fase:', dashHari: 'Hari ke-', dashPanen: 'Panen',
+    phOptimal: 'pH Optimal', tdsOptimal: 'TDS Optimal', suhuOptimal: 'Suhu Air',
+    sn1: 'Semua parameter sensor dalam batas normal', sn1t: 'Baru saja',
+    sn2: 'Melon memasuki fase vegetatif hari ke-32', sn2t: '1 jam lalu',
+    sn3: 'Cek kelembapan tanah — pastikan >40%', sn3t: '2 jam lalu',
+    sn4: 'Jadwal irigasi pagi selesai (8 mnt)', sn4t: '32 menit lalu',
+    ptZones: 'Zona Tanam Melon', psZones: '1 zona aktif · sistem hidroponik · Cucumis melo',
+    glSuhuAir: 'Suhu Air', glPh: 'pH Air', glTds: 'TDS Nutrisi', glKelembapan: 'Kelembapan Tanah',
+    ctZonaUtama: '🍈 Zona Utama — Melon Hidroponik (Cucumis melo)',
+    zmSuhuAir: 'Suhu Air', zmSuhuRuang: 'Suhu Ruangan', zmPh: 'pH Air',
+    zmTds: 'TDS', zmKelembapan: 'Kelembapan', zmStatus: 'Status',
+    fasePertumbuhan: 'Fase Pertumbuhan',
+    ctParamOptimal: 'Parameter optimal melon per fase',
+    ptSensors: 'Monitor Sensor ESP32', psSensors: '5 sensor aktif · data real-time via MQTT',
+    slSuhuAir: 'Suhu Air', slSuhuRuang: 'Suhu Ruangan', slPh: 'pH Air',
+    slTds: 'TDS / Nutrisi', slKelembapan: 'Kelembapan Tanah',
+    ctSensorStatus: 'Status sensor ESP32 · iot/soccer/sensor',
+    ctGrafikSensor: 'Grafik real-time sensor',
+    ptPumps: 'Pompa & Irigasi', psPumps: 'Kontrol manual dan jadwal otomatis',
+    ctJadwal: 'Jadwal irigasi hari ini',
+    ptAnalytics: 'Grafik & Tren', psAnalytics: 'Analitik 7 hari terakhir',
+    ctPhHarian: 'pH harian — Zona A', ctAir: 'Konsumsi air (L/hari)',
+    ctNutrisi: 'Konsumsi nutrisi (ppm avg/hari)', ctBiomassa: 'Produksi biomassa (g/hari estimasi)',
+    ptHarvest: 'Catatan Panen Melon', psHarvest: 'Riwayat dan proyeksi panen · Cucumis melo hidroponik',
+    ctPeriode: 'Periode Panen', ctProgress: 'Progress panen saat ini', ctRiwayat: 'Riwayat panen melon',
+    ptWeather: 'Cuaca & Lingkungan', ctRekCuaca: 'Rekomendasi untuk kebun melon',
+    ctPrakiraan: 'Suhu udara 7 hari ke depan',
+    notifTitle: 'Notifikasi', markAllRead: 'Tandai semua dibaca',
+    deleteAll: 'Hapus semua', noNotif: 'Tidak ada notifikasi',
     settingsTitle: 'Pengaturan Sistem',
     settingsSub: 'Konfigurasi batas sensor dan otomasi — dikirim ke ESP32 via MQTT',
+    ctBatasPh: 'Batas pH', ctBatasTds: 'Batas TDS Nutrisi', ctNotifSettings: 'Notifikasi',
     langLabel: 'Pilih Bahasa', langSub: 'Ubah tampilan teks dashboard',
+    langApplied: '✓ Bahasa Indonesia diterapkan',
+    // Settings labels
+    lblPhMin: 'pH Minimum', subPhMin: 'Notifikasi terkirim apabila nilai pH berada di bawah ambang batas ini',
+    lblPhMax: 'pH Maksimum', subPhMax: 'Notifikasi terkirim apabila nilai pH melampaui ambang batas ini',
+    lblHemat: 'Mode Hemat Energi', subHemat: 'Mengurangi konsumsi daya sebesar 30% pada pukul 22:00–05:00',
+    lblTdsMin: 'TDS Minimum (ppm)', subTdsMin: 'Notifikasi terkirim apabila konsentrasi nutrisi terlalu encer',
+    lblTdsMax: 'TDS Maksimum (ppm)', subTdsMax: 'Notifikasi terkirim apabila konsentrasi nutrisi terlalu pekat',
+    lblWaNumber: 'Nomor WhatsApp (CallMeBot)', subWaNumber: 'Format: +628xxx', linkApiKey: 'Daftar API Key', btnTestWa: 'Test',
+    lblAlertPhSuhu: 'Peringatan pH & Suhu', subAlertPhSuhu: 'Kirim notifikasi otomatis saat nilai melebihi ambang batas',
+    lblEstimasiPanen: 'Estimasi Panen', subEstimasiPanen: 'Pengingat otomatis 5 hari sebelum jadwal panen',
+    lblLaporanHarian: 'Laporan Harian', subLaporanHarian: 'Ringkasan kondisi kebun dikirim setiap pukul 20:00',
+    lblSuhuMin: 'Suhu Minimum (°C)', subSuhuMin: 'Notifikasi terkirim apabila suhu air terlalu rendah',
+    lblSuhuMax: 'Suhu Maksimum (°C)', subSuhuMax: 'Notifikasi terkirim apabila suhu air terlalu tinggi',
+    ctBatasSuhu: 'Batas Suhu Air', ctBahasa: 'Bahasa / Language',
+    belumDikirim: 'Belum dikirim',
+    faseSemai: 'Semai (Hari 1–10)', faseVegetatif: 'Vegetatif (Hari 11–40)',
+    fasePembungaan: 'Pembungaan (Hari 41–55)', fasePembuahan: 'Pembuahan (Hari 56–85)',
+    fasePanen: 'Panen (Hari ke-85)', faseSaatIni: 'Fase Saat Ini',
+    noteSemai: 'Gunakan larutan nutrisi encer dengan intensitas cahaya sedang selama 8–10 jam per hari. Fokus utama pada fase ini adalah perkecambahan akar — hindari larutan yang terlalu pekat agar bibit tidak mengalami stres.',
+    noteVegetatif: 'Tingkatkan kadar Nitrogen (N) sebagai unsur utama pembentuk daun, batang, dan klorofil. Pastikan sistem drainase berjalan lancar agar akar tidak mengalami pembusukan akibat genangan air.',
+    notePembungaan: 'Kurangi kadar Nitrogen (N) agar pertumbuhan vegetatif melambat. Tingkatkan Fosfor (P) untuk merangsang pembentukan bunga, serta Kalium (K) untuk memperkuat tangkai dan kualitas bunga.',
+    notePembuahan: 'Tingkatkan kadar Kalium (K) untuk memperbesar ukuran buah, meningkatkan rasa manis, dan memperpanjang daya simpan. Batasi Nitrogen agar buah tidak terlalu berair, serta jaga kestabilan suhu pada kisaran 18–24°C.',
+    notePanen: 'Kurangi pemberian air mulai 7 hari sebelum panen untuk meningkatkan kadar gula buah (Brix). Hentikan pemberian nutrisi 2–3 hari sebelum panen agar rasa lebih manis dan aroma buah lebih optimal.',
+    pillKritis: 'Kritis', pillPeringatan: 'Peringatan', pillInfo: 'Info',
+    dibaca: 'Dibaca', belumDibaca: 'Belum dibaca', tandaiDibaca: 'Tandai dibaca', hapusSatu: 'Hapus',
+    notifBatasPhSent: 'Batas pH dikirim ke ESP32', notifBatasPhDetail: 'pH min: {0}, max: {1}',
+    notifBatasTdsSent: 'Batas TDS dikirim ke ESP32', notifBatasTdsDetail: 'TDS min: {0} ppm, max: {1} ppm',
+    notifBatasSuhuSent: 'Batas suhu dikirim ke ESP32', notifBatasSuhuDetail: 'Suhu min: {0}°C, max: {1}°C',
+    notifHematSent: 'Pengaturan hemat energi dikirim ke ESP32',
+    notifOtomasiUpdated: 'Otomasi diperbarui',
+    notifPhTinggi: 'pH terlalu tinggi: {0}', notifPhTinggiDetail: 'Nilai pH melebihi batas maksimum {0}. Tambahkan larutan asam phosphat 1–2 ml/L.',
+    notifPhRendah: 'pH terlalu rendah: {0}', notifPhRendahDetail: 'Nilai pH di bawah batas minimum {0}. Tambahkan larutan basa (KOH).',
+    notifSuhuTinggi: 'Suhu air terlalu tinggi: {0}°C', notifSuhuTinggiDetail: 'Suhu melewati batas maksimum {0}°C. Aktifkan pendingin.',
+    notifSuhuRendah: 'Suhu air terlalu rendah: {0}°C', notifSuhuRendahDetail: 'Suhu di bawah batas minimum {0}°C. Aktifkan pemanas.',
+    notifTdsTinggi: 'TDS terlalu tinggi: {0} ppm', notifTdsTinggiDetail: 'Konsentrasi nutrisi melewati batas {0} ppm. Encerkan larutan.',
+    notifLaporanHarian: 'Laporan harian tersedia', notifLaporanHarianDetail: 'pH: {0}, TDS: {1} ppm, Suhu: {2}°C',
+    notifPanen5Hari: 'Panen dalam 5 hari!', notifPanen5HariDetail: 'Tanaman mendekati waktu panen pada {0}. Siapkan peralatan panen.',
+    notifPanenHariIni: 'Waktu panen hari ini!', notifPanenHariIniDetail: 'Ini hari panen yang direncanakan. Selamat panen!',
+    notifSistemAktif: 'Sistem HydroSense aktif', notifSistemAktifDetail: 'Dashboard terhubung. Menunggu data sensor dari MQTT...',
+    notifPumpOn: 'dinyalakan', notifPumpOff: 'dimatikan', notifPumpConfirm: 'Konfirmasi dari ESP32: {0} → {1}',
+    sentAt: '✓ Terkirim', notSent: '✗ MQTT belum terhubung', sending: 'Mengirim...',
   },
   en: {
     mqttStatus: 'MQTT connected · live',
-    utama: 'MAIN', analitik: 'ANALYTICS', sistem: 'SYSTEM',
+    grpUtama: 'MAIN', grpAnalitik: 'ANALYTICS', grpSistem: 'SYSTEM',
     navDashboard: 'Dashboard', navZona: 'Grow Zones', navSensor: 'Sensors',
     navPompa: 'Pumps & Irrigation', navGrafik: 'Charts & Trends', navPanen: 'Harvest',
     navCuaca: 'Weather', navNotif: 'Notifications', navPengaturan: 'Settings',
-    dashTitle: 'Main Dashboard',
-    refreshBtn: 'Refresh data',
-    suhuAirLabel: 'WATER TEMP', suhuRuangLabel: 'ROOM TEMP',
-    phLabel: 'WATER PH', tdsLabel: 'TDS / NUTRIENTS', kelembapanLabel: 'SOIL MOISTURE',
-    notifTitle: 'Notifications',
-    markAllRead: 'Mark all as read',
-    deleteAll: 'Delete all',
-    noNotif: 'No notifications',
+    bnDashboard: 'Home', bnSensor: 'Sensors', bnPompa: 'Pumps',
+    bnPanen: 'Harvest', bnNotif: 'Alerts', bnLainnya: 'More',
+    farmName: '🍈 Melon Hydroponic Farm', farmLoc: '1 Active Zone · Cucumis melo',
+    dashTitle: 'Main Dashboard', refreshBtn: 'Refresh data',
+    suhuAir: 'WATER TEMP', suhuRuang: 'ROOM TEMP', phAir: 'WATER PH',
+    tdsNutrisi: 'TDS / NUTRIENTS', kelembapan: 'SOIL MOISTURE',
+    zonaAktif: 'Active Grow Zone', notifTerbaru: 'Recent Notifications',
+    trenSensor: 'Real-time sensor trend (ESP32 via MQTT)',
+    dashZonePill: '● Normal', dashZoneCrop: 'Melon (Cucumis melo) · 1 active zone',
+    dashFase: 'Phase:', dashHari: 'Day', dashPanen: 'Harvest',
+    phOptimal: 'Optimal pH', tdsOptimal: 'Optimal TDS', suhuOptimal: 'Water Temp',
+    sn1: 'All sensor parameters within normal range', sn1t: 'Just now',
+    sn2: 'Melon entering vegetative phase day 32', sn2t: '1 hour ago',
+    sn3: 'Check soil moisture — ensure >40%', sn3t: '2 hours ago',
+    sn4: 'Morning irrigation schedule done (8 min)', sn4t: '32 minutes ago',
+    ptZones: 'Melon Grow Zones', psZones: '1 active zone · hydroponic system · Cucumis melo',
+    glSuhuAir: 'Water Temp', glPh: 'pH Level', glTds: 'TDS Nutrients', glKelembapan: 'Soil Moisture',
+    ctZonaUtama: '🍈 Main Zone — Melon Hydroponic (Cucumis melo)',
+    zmSuhuAir: 'Water Temp', zmSuhuRuang: 'Room Temp', zmPh: 'pH Level',
+    zmTds: 'TDS', zmKelembapan: 'Moisture', zmStatus: 'Status',
+    fasePertumbuhan: 'Growth Phase',
+    ctParamOptimal: 'Optimal parameters per growth phase',
+    ptSensors: 'ESP32 Sensor Monitor', psSensors: '5 active sensors · real-time data via MQTT',
+    slSuhuAir: 'Water Temp', slSuhuRuang: 'Room Temp', slPh: 'pH Level',
+    slTds: 'TDS / Nutrients', slKelembapan: 'Soil Moisture',
+    ctSensorStatus: 'ESP32 sensor status · iot/soccer/sensor',
+    ctGrafikSensor: 'Real-time sensor chart',
+    ptPumps: 'Pumps & Irrigation', psPumps: 'Manual control and automatic schedule',
+    ctJadwal: "Today's irrigation schedule",
+    ptAnalytics: 'Charts & Trends', psAnalytics: 'Analytics for last 7 days',
+    ctPhHarian: 'Daily pH — Zone A', ctAir: 'Water consumption (L/day)',
+    ctNutrisi: 'Nutrient consumption (ppm avg/day)', ctBiomassa: 'Biomass production (g/day estimate)',
+    ptHarvest: 'Melon Harvest Records', psHarvest: 'History and harvest projections · Cucumis melo hydroponic',
+    ctPeriode: 'Harvest Period', ctProgress: 'Current harvest progress', ctRiwayat: 'Melon harvest history',
+    ptWeather: 'Weather & Environment', ctRekCuaca: 'Recommendations for melon farm',
+    ctPrakiraan: 'Air temperature forecast 7 days ahead',
+    notifTitle: 'Notifications', markAllRead: 'Mark all as read',
+    deleteAll: 'Delete all', noNotif: 'No notifications',
     settingsTitle: 'System Settings',
     settingsSub: 'Configure sensor limits and automation — sent to ESP32 via MQTT',
+    ctBatasPh: 'pH Limits', ctBatasTds: 'TDS Nutrient Limits', ctNotifSettings: 'Notifications',
     langLabel: 'Select Language', langSub: 'Change dashboard display language',
-  }
+    langApplied: '✓ English applied',
+    lblPhMin: 'pH Minimum', subPhMin: 'A notification is sent when the pH value drops below this threshold',
+    lblPhMax: 'pH Maximum', subPhMax: 'A notification is sent when the pH value exceeds this threshold',
+    lblHemat: 'Power Saving Mode', subHemat: 'Reduces power consumption by 30% between 22:00–05:00',
+    lblTdsMin: 'TDS Minimum (ppm)', subTdsMin: 'A notification is sent when nutrient concentration is too diluted',
+    lblTdsMax: 'TDS Maximum (ppm)', subTdsMax: 'A notification is sent when nutrient concentration is too concentrated',
+    lblWaNumber: 'WhatsApp Number (CallMeBot)', subWaNumber: 'Format: +628xxx', linkApiKey: 'Register API Key', btnTestWa: 'Test',
+    lblAlertPhSuhu: 'pH & Temperature Alerts', subAlertPhSuhu: 'Send automatic notifications when values exceed thresholds',
+    lblEstimasiPanen: 'Harvest Estimate', subEstimasiPanen: 'Automatic reminder 5 days before scheduled harvest',
+    lblLaporanHarian: 'Daily Report', subLaporanHarian: 'Farm condition summary sent every day at 20:00',
+    lblSuhuMin: 'Minimum Temperature (°C)', subSuhuMin: 'A notification is sent when water temperature is too low',
+    lblSuhuMax: 'Maximum Temperature (°C)', subSuhuMax: 'A notification is sent when water temperature is too high',
+    ctBatasSuhu: 'Water Temperature Limits', ctBahasa: 'Bahasa / Language',
+    belumDikirim: 'Not sent yet',
+    faseSemai: 'Seedling (Day 1–10)', faseVegetatif: 'Vegetative (Day 11–40)',
+    fasePembungaan: 'Flowering (Day 41–55)', fasePembuahan: 'Fruiting (Day 56–85)',
+    fasePanen: 'Harvest (Day 85)', faseSaatIni: 'Current Phase',
+    noteSemai: 'Use a diluted nutrient solution with moderate light intensity for 8–10 hours per day. The main focus of this phase is root germination — avoid overly concentrated solutions to prevent seedling stress.',
+    noteVegetatif: 'Increase Nitrogen (N) levels as the primary element for leaf, stem, and chlorophyll formation. Ensure smooth drainage so roots do not rot from waterlogging.',
+    notePembungaan: 'Reduce Nitrogen (N) to slow vegetative growth. Increase Phosphorus (P) to stimulate flowering, and Potassium (K) to strengthen flower stalks.',
+    notePembuahan: 'Increase Potassium (K) to enlarge fruit size, enhance sweetness, and extend shelf life. Limit Nitrogen so fruit is not overly watery, and maintain stable temperature within 18–24°C.',
+    notePanen: 'Reduce water supply starting 7 days before harvest to increase fruit sugar content (Brix). Stop nutrient supply 2–3 days before harvest for sweeter taste and optimal aroma.',
+    pillKritis: 'Critical', pillPeringatan: 'Warning', pillInfo: 'Info',
+    dibaca: 'Read', belumDibaca: 'Unread', tandaiDibaca: 'Mark as read', hapusSatu: 'Delete',
+    notifBatasPhSent: 'pH limits sent to ESP32', notifBatasPhDetail: 'pH min: {0}, max: {1}',
+    notifBatasTdsSent: 'TDS limits sent to ESP32', notifBatasTdsDetail: 'TDS min: {0} ppm, max: {1} ppm',
+    notifBatasSuhuSent: 'Temperature limits sent to ESP32', notifBatasSuhuDetail: 'Temp min: {0}°C, max: {1}°C',
+    notifHematSent: 'Power saving settings sent to ESP32',
+    notifOtomasiUpdated: 'Automation updated',
+    notifPhTinggi: 'pH too high: {0}', notifPhTinggiDetail: 'pH value exceeds maximum limit {0}. Add phosphoric acid solution 1–2 ml/L.',
+    notifPhRendah: 'pH too low: {0}', notifPhRendahDetail: 'pH value is below minimum limit {0}. Add alkaline solution (KOH).',
+    notifSuhuTinggi: 'Water temperature too high: {0}°C', notifSuhuTinggiDetail: 'Temperature exceeds maximum limit {0}°C. Activate cooling.',
+    notifSuhuRendah: 'Water temperature too low: {0}°C', notifSuhuRendahDetail: 'Temperature is below minimum limit {0}°C. Activate heating.',
+    notifTdsTinggi: 'TDS too high: {0} ppm', notifTdsTinggiDetail: 'Nutrient concentration exceeds limit {0} ppm. Dilute the solution.',
+    notifLaporanHarian: 'Daily report available', notifLaporanHarianDetail: 'pH: {0}, TDS: {1} ppm, Temp: {2}°C',
+    notifPanen5Hari: 'Harvest in 5 days!', notifPanen5HariDetail: 'Plants are nearing harvest time on {0}. Prepare harvesting equipment.',
+    notifPanenHariIni: 'Harvest day today!', notifPanenHariIniDetail: 'Today is the scheduled harvest day. Happy harvesting!',
+    notifSistemAktif: 'HydroSense system active', notifSistemAktifDetail: 'Dashboard connected. Waiting for sensor data via MQTT...',
+    notifPumpOn: 'turned on', notifPumpOff: 'turned off', notifPumpConfirm: 'Confirmation from ESP32: {0} → {1}',
+    sentAt: '✓ Sent', notSent: '✗ MQTT not connected', sending: 'Sending...',
+  },
+  ms: {
+    mqttStatus: 'MQTT disambung · langsung',
+    grpUtama: 'UTAMA', grpAnalitik: 'ANALITIK', grpSistem: 'SISTEM',
+    navDashboard: 'Papan Pemuka', navZona: 'Zon Tanaman', navSensor: 'Sensor',
+    navPompa: 'Pam & Pengairan', navGrafik: 'Graf & Trend', navPanen: 'Tuaian',
+    navCuaca: 'Cuaca', navNotif: 'Pemberitahuan', navPengaturan: 'Tetapan',
+    bnDashboard: 'Utama', bnSensor: 'Sensor', bnPompa: 'Pam',
+    bnPanen: 'Tuai', bnNotif: 'Notif', bnLainnya: 'Lain',
+    farmName: '🍈 Ladang Tembikai Hidroponik', farmLoc: '1 Zon Aktif · Cucumis melo',
+    dashTitle: 'Papan Pemuka Utama', refreshBtn: 'Muat semula data',
+    suhuAir: 'SUHU AIR', suhuRuang: 'SUHU BILIK', phAir: 'PH AIR',
+    tdsNutrisi: 'TDS / NUTRIEN', kelembapan: 'KELEMBAPAN TANAH',
+    zonaAktif: 'Zon Tanaman Aktif', notifTerbaru: 'Pemberitahuan Terkini',
+    trenSensor: 'Tren sensor masa nyata (ESP32 via MQTT)',
+    dashZonePill: '● Normal', dashZoneCrop: 'Tembikai (Cucumis melo) · 1 zon aktif',
+    dashFase: 'Fasa:', dashHari: 'Hari ke-', dashPanen: 'Tuaian',
+    phOptimal: 'pH Optimum', tdsOptimal: 'TDS Optimum', suhuOptimal: 'Suhu Air',
+    sn1: 'Semua parameter sensor dalam had normal', sn1t: 'Baru sahaja',
+    sn2: 'Tembikai memasuki fasa vegetatif hari ke-32', sn2t: '1 jam lalu',
+    sn3: 'Semak kelembapan tanah — pastikan >40%', sn3t: '2 jam lalu',
+    sn4: 'Jadual pengairan pagi selesai (8 min)', sn4t: '32 minit lalu',
+    ptZones: 'Zon Tanaman Tembikai', psZones: '1 zon aktif · sistem hidroponik · Cucumis melo',
+    glSuhuAir: 'Suhu Air', glPh: 'pH Air', glTds: 'TDS Nutrien', glKelembapan: 'Kelembapan Tanah',
+    ctZonaUtama: '🍈 Zon Utama — Tembikai Hidroponik (Cucumis melo)',
+    zmSuhuAir: 'Suhu Air', zmSuhuRuang: 'Suhu Bilik', zmPh: 'pH Air',
+    zmTds: 'TDS', zmKelembapan: 'Kelembapan', zmStatus: 'Status',
+    fasePertumbuhan: 'Fasa Pertumbuhan',
+    ctParamOptimal: 'Parameter optimum tembikai mengikut fasa',
+    ptSensors: 'Monitor Sensor ESP32', psSensors: '5 sensor aktif · data masa nyata via MQTT',
+    slSuhuAir: 'Suhu Air', slSuhuRuang: 'Suhu Bilik', slPh: 'pH Air',
+    slTds: 'TDS / Nutrien', slKelembapan: 'Kelembapan Tanah',
+    ctSensorStatus: 'Status sensor ESP32 · iot/soccer/sensor',
+    ctGrafikSensor: 'Graf sensor masa nyata',
+    ptPumps: 'Pam & Pengairan', psPumps: 'Kawalan manual dan jadual automatik',
+    ctJadwal: 'Jadual pengairan hari ini',
+    ptAnalytics: 'Graf & Trend', psAnalytics: 'Analitik 7 hari lepas',
+    ctPhHarian: 'pH harian — Zon A', ctAir: 'Penggunaan air (L/hari)',
+    ctNutrisi: 'Penggunaan nutrien (ppm purata/hari)', ctBiomassa: 'Pengeluaran biojisim (g/hari anggaran)',
+    ptHarvest: 'Rekod Tuaian Tembikai', psHarvest: 'Sejarah dan unjuran tuaian · Cucumis melo hidroponik',
+    ctPeriode: 'Tempoh Tuaian', ctProgress: 'Kemajuan tuaian semasa', ctRiwayat: 'Sejarah tuaian tembikai',
+    ptWeather: 'Cuaca & Persekitaran', ctRekCuaca: 'Cadangan untuk ladang tembikai',
+    ctPrakiraan: 'Suhu udara 7 hari akan datang',
+    notifTitle: 'Pemberitahuan', markAllRead: 'Tandai semua dibaca',
+    deleteAll: 'Padam semua', noNotif: 'Tiada pemberitahuan',
+    settingsTitle: 'Tetapan Sistem',
+    settingsSub: 'Konfigurasi had sensor dan automasi — dihantar ke ESP32 via MQTT',
+    ctBatasPh: 'Had pH', ctBatasTds: 'Had TDS Nutrien', ctNotifSettings: 'Pemberitahuan',
+    langLabel: 'Pilih Bahasa', langSub: 'Tukar bahasa paparan papan pemuka',
+    langApplied: '✓ Bahasa Melayu diterapkan',
+    lblPhMin: 'pH Minimum', subPhMin: 'Pemberitahuan dihantar apabila nilai pH di bawah ambang ini',
+    lblPhMax: 'pH Maksimum', subPhMax: 'Pemberitahuan dihantar apabila nilai pH melebihi ambang ini',
+    lblHemat: 'Mod Jimat Tenaga', subHemat: 'Mengurangkan penggunaan kuasa sebanyak 30% pada 22:00–05:00',
+    lblTdsMin: 'TDS Minimum (ppm)', subTdsMin: 'Pemberitahuan dihantar apabila kepekatan nutrien terlalu cair',
+    lblTdsMax: 'TDS Maksimum (ppm)', subTdsMax: 'Pemberitahuan dihantar apabila kepekatan nutrien terlalu pekat',
+    lblWaNumber: 'Nombor WhatsApp (CallMeBot)', subWaNumber: 'Format: +628xxx', linkApiKey: 'Daftar Kunci API', btnTestWa: 'Uji',
+    lblAlertPhSuhu: 'Amaran pH & Suhu', subAlertPhSuhu: 'Hantar pemberitahuan automatik apabila nilai melebihi ambang',
+    lblEstimasiPanen: 'Anggaran Tuaian', subEstimasiPanen: 'Peringatan automatik 5 hari sebelum jadual tuaian',
+    lblLaporanHarian: 'Laporan Harian', subLaporanHarian: 'Ringkasan keadaan ladang dihantar setiap pukul 20:00',
+    lblSuhuMin: 'Suhu Minimum (°C)', subSuhuMin: 'Pemberitahuan dihantar apabila suhu air terlalu rendah',
+    lblSuhuMax: 'Suhu Maksimum (°C)', subSuhuMax: 'Pemberitahuan dihantar apabila suhu air terlalu tinggi',
+    ctBatasSuhu: 'Had Suhu Air', ctBahasa: 'Bahasa / Language',
+    belumDikirim: 'Belum dihantar',
+    faseSemai: 'Semaian (Hari 1–10)', faseVegetatif: 'Vegetatif (Hari 11–40)',
+    fasePembungaan: 'Pembungaan (Hari 41–55)', fasePembuahan: 'Pembuahan (Hari 56–85)',
+    fasePanen: 'Tuaian (Hari ke-85)', faseSaatIni: 'Fasa Semasa',
+    noteSemai: 'Gunakan larutan nutrien cair dengan keamatan cahaya sederhana selama 8–10 jam sehari. Fokus utama fasa ini ialah percambahan akar — elakkan larutan terlalu pekat agar anak benih tidak tertekan.',
+    noteVegetatif: 'Tingkatkan kadar Nitrogen (N) sebagai unsur utama pembentuk daun, batang, dan klorofil. Pastikan saliran lancar agar akar tidak reput akibat air bertakung.',
+    notePembungaan: 'Kurangkan Nitrogen (N) agar pertumbuhan vegetatif perlahan. Tingkatkan Fosforus (P) untuk merangsang pembungaan, dan Kalium (K) untuk mengukuhkan tangkai bunga.',
+    notePembuahan: 'Tingkatkan Kalium (K) untuk membesarkan buah, meningkatkan rasa manis, dan tahan simpan. Hadkan Nitrogen agar buah tidak terlalu berair, dan kekalkan suhu stabil pada 18–24°C.',
+    notePanen: 'Kurangkan bekalan air mulai 7 hari sebelum tuaian untuk meningkatkan kandungan gula buah (Brix). Hentikan nutrien 2–3 hari sebelum tuaian untuk rasa lebih manis dan aroma optimum.',
+    pillKritis: 'Kritikal', pillPeringatan: 'Amaran', pillInfo: 'Info',
+    dibaca: 'Dibaca', belumDibaca: 'Belum Dibaca', tandaiDibaca: 'Tanda dibaca', hapusSatu: 'Padam',
+    notifBatasPhSent: 'Had pH dihantar ke ESP32', notifBatasPhDetail: 'pH min: {0}, max: {1}',
+    notifBatasTdsSent: 'Had TDS dihantar ke ESP32', notifBatasTdsDetail: 'TDS min: {0} ppm, max: {1} ppm',
+    notifBatasSuhuSent: 'Had suhu dihantar ke ESP32', notifBatasSuhuDetail: 'Suhu min: {0}°C, max: {1}°C',
+    notifHematSent: 'Tetapan jimat tenaga dihantar ke ESP32',
+    notifOtomasiUpdated: 'Automasi dikemas kini',
+    notifPhTinggi: 'pH terlalu tinggi: {0}', notifPhTinggiDetail: 'Nilai pH melebihi had maksimum {0}. Tambah larutan asid fosforik 1–2 ml/L.',
+    notifPhRendah: 'pH terlalu rendah: {0}', notifPhRendahDetail: 'Nilai pH di bawah had minimum {0}. Tambah larutan beralkali (KOH).',
+    notifSuhuTinggi: 'Suhu air terlalu tinggi: {0}°C', notifSuhuTinggiDetail: 'Suhu melebihi had maksimum {0}°C. Aktifkan penyejuk.',
+    notifSuhuRendah: 'Suhu air terlalu rendah: {0}°C', notifSuhuRendahDetail: 'Suhu di bawah had minimum {0}°C. Aktifkan pemanas.',
+    notifTdsTinggi: 'TDS terlalu tinggi: {0} ppm', notifTdsTinggiDetail: 'Kepekatan nutrien melebihi had {0} ppm. Cairkan larutan.',
+    notifLaporanHarian: 'Laporan harian tersedia', notifLaporanHarianDetail: 'pH: {0}, TDS: {1} ppm, Suhu: {2}°C',
+    notifPanen5Hari: 'Tuaian dalam 5 hari!', notifPanen5HariDetail: 'Tanaman hampir tiba masa tuai pada {0}. Sediakan peralatan tuaian.',
+    notifPanenHariIni: 'Hari tuaian hari ini!', notifPanenHariIniDetail: 'Ini hari tuaian yang dirancang. Selamat menuai!',
+    notifSistemAktif: 'Sistem HydroSense aktif', notifSistemAktifDetail: 'Papan pemuka disambung. Menunggu data sensor daripada MQTT...',
+    notifPumpOn: 'dihidupkan', notifPumpOff: 'dimatikan', notifPumpConfirm: 'Pengesahan daripada ESP32: {0} → {1}',
+    sentAt: '✓ Dihantar', notSent: '✗ MQTT belum disambung', sending: 'Menghantar...',
+  },
+  zh: {
+    mqttStatus: 'MQTT 已连接 · 实时',
+    grpUtama: '主要', grpAnalitik: '分析', grpSistem: '系统',
+    navDashboard: '仪表盘', navZona: '种植区', navSensor: '传感器',
+    navPompa: '水泵与灌溉', navGrafik: '图表与趋势', navPanen: '收获',
+    navCuaca: '天气', navNotif: '通知', navPengaturan: '设置',
+    bnDashboard: '首页', bnSensor: '传感器', bnPompa: '水泵',
+    bnPanen: '收获', bnNotif: '通知', bnLainnya: '更多',
+    farmName: '🍈 甜瓜水培农场', farmLoc: '1个活跃区域 · 甜瓜',
+    dashTitle: '主仪表盘', refreshBtn: '刷新数据',
+    suhuAir: '水温', suhuRuang: '室温', phAir: '水体PH',
+    tdsNutrisi: 'TDS / 营养液', kelembapan: '土壤湿度',
+    zonaAktif: '活跃种植区', notifTerbaru: '最新通知',
+    trenSensor: '实时传感器趋势 (ESP32 via MQTT)',
+    dashZonePill: '● 正常', dashZoneCrop: '甜瓜 (Cucumis melo) · 1个活跃区域',
+    dashFase: '阶段:', dashHari: '第', dashPanen: '收获',
+    phOptimal: '最优pH', tdsOptimal: '最优TDS', suhuOptimal: '水温',
+    sn1: '所有传感器参数在正常范围内', sn1t: '刚刚',
+    sn2: '甜瓜进入第32天营养生长期', sn2t: '1小时前',
+    sn3: '检查土壤湿度 — 确保>40%', sn3t: '2小时前',
+    sn4: '早晨灌溉计划完成（8分钟）', sn4t: '32分钟前',
+    ptZones: '甜瓜种植区', psZones: '1个活跃区域 · 水培系统 · 甜瓜',
+    glSuhuAir: '水温', glPh: 'pH值', glTds: 'TDS营养液', glKelembapan: '土壤湿度',
+    ctZonaUtama: '🍈 主区域 — 甜瓜水培 (Cucumis melo)',
+    zmSuhuAir: '水温', zmSuhuRuang: '室温', zmPh: 'pH值',
+    zmTds: 'TDS', zmKelembapan: '湿度', zmStatus: '状态',
+    fasePertumbuhan: '生长阶段',
+    ctParamOptimal: '各生长阶段最优参数',
+    ptSensors: 'ESP32传感器监控', psSensors: '5个活跃传感器 · 通过MQTT实时数据',
+    slSuhuAir: '水温', slSuhuRuang: '室温', slPh: 'pH值',
+    slTds: 'TDS / 营养液', slKelembapan: '土壤湿度',
+    ctSensorStatus: 'ESP32传感器状态 · iot/soccer/sensor',
+    ctGrafikSensor: '实时传感器图表',
+    ptPumps: '水泵与灌溉', psPumps: '手动控制和自动计划',
+    ctJadwal: '今日灌溉计划',
+    ptAnalytics: '图表与趋势', psAnalytics: '过去7天分析',
+    ctPhHarian: '每日pH — A区', ctAir: '用水量 (L/天)',
+    ctNutrisi: '营养液消耗 (ppm平均/天)', ctBiomassa: '生物量产出 (g/天估算)',
+    ptHarvest: '甜瓜收获记录', psHarvest: '历史和收获预测 · 甜瓜水培',
+    ctPeriode: '收获期', ctProgress: '当前收获进度', ctRiwayat: '甜瓜收获历史',
+    ptWeather: '天气与环境', ctRekCuaca: '甜瓜农场建议',
+    ctPrakiraan: '未来7天气温预报',
+    notifTitle: '通知', markAllRead: '全部标为已读',
+    deleteAll: '全部删除', noNotif: '暂无通知',
+    settingsTitle: '系统设置',
+    settingsSub: '配置传感器限值和自动化 — 通过MQTT发送到ESP32',
+    ctBatasPh: 'pH限值', ctBatasTds: 'TDS营养液限值', ctNotifSettings: '通知',
+    langLabel: '选择语言', langSub: '更改仪表盘显示语言',
+    langApplied: '✓ 已应用中文',
+    lblPhMin: 'pH 最小值', subPhMin: '当pH值低于此阈值时发送通知',
+    lblPhMax: 'pH 最大值', subPhMax: '当pH值超过此阈值时发送通知',
+    lblHemat: '节能模式', subHemat: '在22:00–05:00期间降低30%的电力消耗',
+    lblTdsMin: 'TDS 最小值 (ppm)', subTdsMin: '当营养液浓度过稀时发送通知',
+    lblTdsMax: 'TDS 最大值 (ppm)', subTdsMax: '当营养液浓度过浓时发送通知',
+    lblWaNumber: 'WhatsApp 号码 (CallMeBot)', subWaNumber: '格式：+628xxx', linkApiKey: '注册 API 密钥', btnTestWa: '测试',
+    lblAlertPhSuhu: 'pH 与温度警报', subAlertPhSuhu: '当数值超出阈值时自动发送通知',
+    lblEstimasiPanen: '收获预估', subEstimasiPanen: '收获前5天自动提醒',
+    lblLaporanHarian: '每日报告', subLaporanHarian: '每天20:00发送农场状况摘要',
+    lblSuhuMin: '最低温度 (°C)', subSuhuMin: '当水温过低时发送通知',
+    lblSuhuMax: '最高温度 (°C)', subSuhuMax: '当水温过高时发送通知',
+    ctBatasSuhu: '水温限值', ctBahasa: 'Bahasa / Language',
+    belumDikirim: '尚未发送',
+    faseSemai: '育苗期 (第1–10天)', faseVegetatif: '营养生长期 (第11–40天)',
+    fasePembungaan: '开花期 (第41–55天)', fasePembuahan: '结果期 (第56–85天)',
+    fasePanen: '收获期 (第85天)', faseSaatIni: '当前阶段',
+    noteSemai: '使用稀释的营养液，每天保持8–10小时中等光照强度。此阶段的重点是根系萌发——避免使用过浓的溶液以防幼苗受到胁迫。',
+    noteVegetatif: '提高氮(N)含量，这是形成叶片、茎和叶绿素的主要元素。确保排水顺畅，防止根部因积水而腐烂。',
+    notePembungaan: '降低氮(N)含量以减缓营养生长。提高磷(P)以促进开花，提高钾(K)以增强花梗强度。',
+    notePembuahan: '提高钾(K)含量以增大果实、提升甜度并延长保存期。限制氮含量以防止果实水分过多，并将温度稳定保持在18–24°C。',
+    notePanen: '收获前7天起减少供水以提高果实糖度(Brix)。收获前2–3天停止施肥，使口感更甜、香气更佳。',
+    pillKritis: '严重', pillPeringatan: '警告', pillInfo: '信息',
+    dibaca: '已读', belumDibaca: '未读', tandaiDibaca: '标为已读', hapusSatu: '删除',
+    notifBatasPhSent: 'pH限值已发送至ESP32', notifBatasPhDetail: 'pH最小: {0}, 最大: {1}',
+    notifBatasTdsSent: 'TDS限值已发送至ESP32', notifBatasTdsDetail: 'TDS最小: {0} ppm, 最大: {1} ppm',
+    notifBatasSuhuSent: '温度限值已发送至ESP32', notifBatasSuhuDetail: '温度最小: {0}°C, 最大: {1}°C',
+    notifHematSent: '节能设置已发送至ESP32',
+    notifOtomasiUpdated: '自动化已更新',
+    notifPhTinggi: 'pH过高: {0}', notifPhTinggiDetail: 'pH值超过最大限值{0}。请添加磷酸溶液1–2 ml/L。',
+    notifPhRendah: 'pH过低: {0}', notifPhRendahDetail: 'pH值低于最小限值{0}。请添加碱性溶液(KOH)。',
+    notifSuhuTinggi: '水温过高: {0}°C', notifSuhuTinggiDetail: '温度超过最大限值{0}°C。请启动制冷。',
+    notifSuhuRendah: '水温过低: {0}°C', notifSuhuRendahDetail: '温度低于最小限值{0}°C。请启动加热。',
+    notifTdsTinggi: 'TDS过高: {0} ppm', notifTdsTinggiDetail: '营养液浓度超过限值{0} ppm。请稀释溶液。',
+    notifLaporanHarian: '每日报告已生成', notifLaporanHarianDetail: 'pH: {0}, TDS: {1} ppm, 温度: {2}°C',
+    notifPanen5Hari: '5天后收获！', notifPanen5HariDetail: '作物即将于{0}收获，请准备收获工具。',
+    notifPanenHariIni: '今天是收获日！', notifPanenHariIniDetail: '今天是计划的收获日。祝丰收！',
+    notifSistemAktif: 'HydroSense系统已激活', notifSistemAktifDetail: '仪表盘已连接，正在等待通过MQTT传输的传感器数据...',
+    notifPumpOn: '已开启', notifPumpOff: '已关闭', notifPumpConfirm: '来自ESP32的确认：{0} → {1}',
+    sentAt: '✓ 已发送', notSent: '✗ MQTT 未连接', sending: '发送中...',
+  },
+  ja: {
+    mqttStatus: 'MQTT 接続中 · ライブ',
+    grpUtama: 'メイン', grpAnalitik: '分析', grpSistem: 'システム',
+    navDashboard: 'ダッシュボード', navZona: '栽培ゾーン', navSensor: 'センサー',
+    navPompa: 'ポンプ・灌漑', navGrafik: 'グラフ・トレンド', navPanen: '収穫',
+    navCuaca: '天気', navNotif: '通知', navPengaturan: '設定',
+    bnDashboard: 'ホーム', bnSensor: 'センサー', bnPompa: 'ポンプ',
+    bnPanen: '収穫', bnNotif: '通知', bnLainnya: 'その他',
+    farmName: '🍈 メロン水耕栽培農場', farmLoc: '1アクティブゾーン · Cucumis melo',
+    dashTitle: 'メインダッシュボード', refreshBtn: 'データ更新',
+    suhuAir: '水温', suhuRuang: '室温', phAir: '水質PH',
+    tdsNutrisi: 'TDS / 養液', kelembapan: '土壌湿度',
+    zonaAktif: 'アクティブ栽培ゾーン', notifTerbaru: '最新通知',
+    trenSensor: 'リアルタイムセンサートレンド (ESP32 via MQTT)',
+    dashZonePill: '● 正常', dashZoneCrop: 'メロン (Cucumis melo) · 1ゾーン稼動中',
+    dashFase: 'フェーズ:', dashHari: '日目', dashPanen: '収穫',
+    phOptimal: '最適pH', tdsOptimal: '最適TDS', suhuOptimal: '水温',
+    sn1: 'すべてのセンサーパラメーターが正常範囲内', sn1t: 'たった今',
+    sn2: 'メロンが栄養成長期32日目に入りました', sn2t: '1時間前',
+    sn3: '土壌湿度を確認 — 40%以上を確保してください', sn3t: '2時間前',
+    sn4: '朝の灌漑スケジュール完了（8分）', sn4t: '32分前',
+    ptZones: 'メロン栽培ゾーン', psZones: '1ゾーン稼動 · 水耕システム · Cucumis melo',
+    glSuhuAir: '水温', glPh: 'pH値', glTds: 'TDS養液', glKelembapan: '土壌湿度',
+    ctZonaUtama: '🍈 メインゾーン — メロン水耕栽培 (Cucumis melo)',
+    zmSuhuAir: '水温', zmSuhuRuang: '室温', zmPh: 'pH値',
+    zmTds: 'TDS', zmKelembapan: '湿度', zmStatus: '状態',
+    fasePertumbuhan: '成長フェーズ',
+    ctParamOptimal: '成長フェーズ別最適パラメーター',
+    ptSensors: 'ESP32センサーモニター', psSensors: '5センサー稼動 · MQTTリアルタイムデータ',
+    slSuhuAir: '水温', slSuhuRuang: '室温', slPh: 'pH値',
+    slTds: 'TDS / 養液', slKelembapan: '土壌湿度',
+    ctSensorStatus: 'ESP32センサーステータス · iot/soccer/sensor',
+    ctGrafikSensor: 'リアルタイムセンサーグラフ',
+    ptPumps: 'ポンプ・灌漑', psPumps: '手動制御および自動スケジュール',
+    ctJadwal: '本日の灌漑スケジュール',
+    ptAnalytics: 'グラフ・トレンド', psAnalytics: '過去7日間の分析',
+    ctPhHarian: '日次pH — ゾーンA', ctAir: '用水量 (L/日)',
+    ctNutrisi: '養液消費量 (ppm平均/日)', ctBiomassa: 'バイオマス生産量 (g/日推定)',
+    ptHarvest: 'メロン収穫記録', psHarvest: '履歴および収穫予測 · メロン水耕栽培',
+    ctPeriode: '収穫期間', ctProgress: '現在の収穫進捗', ctRiwayat: 'メロン収穫履歴',
+    ptWeather: '天気・環境', ctRekCuaca: 'メロン農場への推奨事項',
+    ctPrakiraan: '今後7日間の気温予報',
+    notifTitle: '通知', markAllRead: 'すべて既読にする',
+    deleteAll: 'すべて削除', noNotif: '通知はありません',
+    settingsTitle: 'システム設定',
+    settingsSub: 'センサー限界値と自動化を設定 — MQTTでESP32に送信',
+    ctBatasPh: 'pH制限値', ctBatasTds: 'TDS養液制限値', ctNotifSettings: '通知',
+    langLabel: '言語を選択', langSub: 'ダッシュボードの表示言語を変更',
+    langApplied: '✓ 日本語が適用されました',
+    lblPhMin: 'pH最小値', subPhMin: 'pH値がこのしきい値を下回ると通知が送信されます',
+    lblPhMax: 'pH最大値', subPhMax: 'pH値がこのしきい値を超えると通知が送信されます',
+    lblHemat: '省エネモード', subHemat: '22:00〜05:00の間、消費電力を30%削減します',
+    lblTdsMin: 'TDS最小値 (ppm)', subTdsMin: '養液濃度が薄すぎる場合に通知が送信されます',
+    lblTdsMax: 'TDS最大値 (ppm)', subTdsMax: '養液濃度が濃すぎる場合に通知が送信されます',
+    lblWaNumber: 'WhatsApp番号 (CallMeBot)', subWaNumber: '形式：+628xxx', linkApiKey: 'APIキー登録', btnTestWa: 'テスト',
+    lblAlertPhSuhu: 'pH・温度アラート', subAlertPhSuhu: '値がしきい値を超えると自動通知を送信します',
+    lblEstimasiPanen: '収穫予測', subEstimasiPanen: '収穫予定日の5日前に自動リマインダー',
+    lblLaporanHarian: '日次レポート', subLaporanHarian: '毎日20:00に農場状況のサマリーを送信します',
+    lblSuhuMin: '最低温度 (°C)', subSuhuMin: '水温が低すぎる場合に通知が送信されます',
+    lblSuhuMax: '最高温度 (°C)', subSuhuMax: '水温が高すぎる場合に通知が送信されます',
+    ctBatasSuhu: '水温制限値', ctBahasa: 'Bahasa / Language',
+    belumDikirim: '未送信',
+    faseSemai: '育苗期（1〜10日目）', faseVegetatif: '栄養成長期（11〜40日目）',
+    fasePembungaan: '開花期（41〜55日目）', fasePembuahan: '結実期（56〜85日目）',
+    fasePanen: '収穫期（85日目）', faseSaatIni: '現在のフェーズ',
+    noteSemai: '1日8〜10時間程度の中程度の光量で、薄い養液を使用してください。このフェーズの主な目的は根の発芽であり、苗にストレスを与えないよう濃すぎる溶液は避けてください。',
+    noteVegetatif: '葉、茎、葉緑素を形成する主要元素である窒素（N）の濃度を高めてください。水はけを良くし、根の腐敗を防いでください。',
+    notePembungaan: '栄養成長を抑えるため窒素（N）を減らしてください。開花を促すためリン（P）を増やし、花茎を強化するためカリウム（K）を増やしてください。',
+    notePembuahan: '果実を大きくし、甘みを増し、保存性を高めるためカリウム（K）を増やしてください。果実の水分過多を防ぐため窒素を制限し、温度を18〜24°Cに安定させてください。',
+    notePanen: '収穫7日前から灌水量を減らし、糖度（Brix）を高めてください。収穫2〜3日前に施肥を停止すると、より甘く、香りも最適になります。',
+    pillKritis: '重大', pillPeringatan: '警告', pillInfo: '情報',
+    dibaca: '既読', belumDibaca: '未読', tandaiDibaca: '既読にする', hapusSatu: '削除',
+    notifBatasPhSent: 'pH制限値をESP32に送信しました', notifBatasPhDetail: 'pH最小: {0}、最大: {1}',
+    notifBatasTdsSent: 'TDS制限値をESP32に送信しました', notifBatasTdsDetail: 'TDS最小: {0} ppm、最大: {1} ppm',
+    notifBatasSuhuSent: '温度制限値をESP32に送信しました', notifBatasSuhuDetail: '温度最小: {0}°C、最大: {1}°C',
+    notifHematSent: '省エネ設定をESP32に送信しました',
+    notifOtomasiUpdated: '自動化設定が更新されました',
+    notifPhTinggi: 'pHが高すぎます: {0}', notifPhTinggiDetail: 'pH値が最大限値{0}を超えています。リン酸溶液1〜2 ml/Lを追加してください。',
+    notifPhRendah: 'pHが低すぎます: {0}', notifPhRendahDetail: 'pH値が最小限値{0}を下回っています。アルカリ性溶液（KOH）を追加してください。',
+    notifSuhuTinggi: '水温が高すぎます: {0}°C', notifSuhuTinggiDetail: '温度が最大限値{0}°Cを超えています。冷却を作動させてください。',
+    notifSuhuRendah: '水温が低すぎます: {0}°C', notifSuhuRendahDetail: '温度が最小限値{0}°Cを下回っています。加温を作動させてください。',
+    notifTdsTinggi: 'TDSが高すぎます: {0} ppm', notifTdsTinggiDetail: '養液濃度が限値{0} ppmを超えています。溶液を薄めてください。',
+    notifLaporanHarian: '日次レポートが利用可能です', notifLaporanHarianDetail: 'pH: {0}、TDS: {1} ppm、温度: {2}°C',
+    notifPanen5Hari: '収穫まであと5日！', notifPanen5HariDetail: '{0}に収穫時期を迎えます。収穫用具を準備してください。',
+    notifPanenHariIni: '本日は収穫日です！', notifPanenHariIniDetail: '本日は予定の収穫日です。良い収穫を！',
+    notifSistemAktif: 'HydroSenseシステム稼働中', notifSistemAktifDetail: 'ダッシュボードが接続されました。MQTT経由のセンサーデータを待機しています...',
+    notifPumpOn: 'オンになりました', notifPumpOff: 'オフになりました', notifPumpConfirm: 'ESP32からの確認：{0} → {1}',
+    sentAt: '✓ 送信済み', notSent: '✗ MQTT未接続', sending: '送信中...',
+  },
+  ar: {
+    mqttStatus: 'MQTT متصل · مباشر',
+    grpUtama: 'رئيسي', grpAnalitik: 'تحليلات', grpSistem: 'نظام',
+    navDashboard: 'لوحة التحكم', navZona: 'مناطق الزراعة', navSensor: 'المستشعرات',
+    navPompa: 'مضخات وري', navGrafik: 'مخططات واتجاهات', navPanen: 'الحصاد',
+    navCuaca: 'الطقس', navNotif: 'الإشعارات', navPengaturan: 'الإعدادات',
+    bnDashboard: 'الرئيسية', bnSensor: 'المستشعرات', bnPompa: 'المضخات',
+    bnPanen: 'الحصاد', bnNotif: 'تنبيه', bnLainnya: 'المزيد',
+    farmName: '🍈 مزرعة شمام هيدروبونيك', farmLoc: '1 منطقة نشطة · Cucumis melo',
+    dashTitle: 'لوحة التحكم الرئيسية', refreshBtn: 'تحديث البيانات',
+    suhuAir: 'درجة حرارة الماء', suhuRuang: 'درجة حرارة الغرفة', phAir: 'درجة حموضة الماء',
+    tdsNutrisi: 'TDS / المغذيات', kelembapan: 'رطوبة التربة',
+    zonaAktif: 'منطقة الزراعة النشطة', notifTerbaru: 'أحدث الإشعارات',
+    trenSensor: 'اتجاه المستشعر الفوري (ESP32 via MQTT)',
+    dashZonePill: '● طبيعي', dashZoneCrop: 'شمام (Cucumis melo) · 1 منطقة نشطة',
+    dashFase: 'المرحلة:', dashHari: 'اليوم', dashPanen: 'الحصاد',
+    phOptimal: 'pH المثالي', tdsOptimal: 'TDS المثالي', suhuOptimal: 'درجة حرارة الماء',
+    sn1: 'جميع معاملات المستشعر ضمن النطاق الطبيعي', sn1t: 'الآن',
+    sn2: 'الشمام يدخل مرحلة النمو الخضري اليوم 32', sn2t: 'منذ ساعة',
+    sn3: 'تحقق من رطوبة التربة — تأكد من >40%', sn3t: 'منذ ساعتين',
+    sn4: 'انتهى جدول الري الصباحي (8 دقائق)', sn4t: 'منذ 32 دقيقة',
+    ptZones: 'مناطق زراعة الشمام', psZones: '1 منطقة نشطة · نظام هيدروبونيك · Cucumis melo',
+    glSuhuAir: 'درجة حرارة الماء', glPh: 'درجة الحموضة', glTds: 'TDS المغذيات', glKelembapan: 'رطوبة التربة',
+    ctZonaUtama: '🍈 المنطقة الرئيسية — شمام هيدروبونيك (Cucumis melo)',
+    zmSuhuAir: 'درجة حرارة الماء', zmSuhuRuang: 'درجة حرارة الغرفة', zmPh: 'درجة الحموضة',
+    zmTds: 'TDS', zmKelembapan: 'الرطوبة', zmStatus: 'الحالة',
+    fasePertumbuhan: 'مرحلة النمو',
+    ctParamOptimal: 'المعاملات المثالية لكل مرحلة نمو',
+    ptSensors: 'مراقب مستشعر ESP32', psSensors: '5 مستشعرات نشطة · بيانات فورية عبر MQTT',
+    slSuhuAir: 'درجة حرارة الماء', slSuhuRuang: 'درجة حرارة الغرفة', slPh: 'درجة الحموضة',
+    slTds: 'TDS / المغذيات', slKelembapan: 'رطوبة التربة',
+    ctSensorStatus: 'حالة مستشعر ESP32 · iot/soccer/sensor',
+    ctGrafikSensor: 'مخطط المستشعر الفوري',
+    ptPumps: 'مضخات وري', psPumps: 'تحكم يدوي وجدول تلقائي',
+    ctJadwal: 'جدول الري اليوم',
+    ptAnalytics: 'مخططات واتجاهات', psAnalytics: 'تحليلات آخر 7 أيام',
+    ctPhHarian: 'pH اليومي — المنطقة أ', ctAir: 'استهلاك الماء (لتر/يوم)',
+    ctNutrisi: 'استهلاك المغذيات (ppm متوسط/يوم)', ctBiomassa: 'إنتاج الكتلة الحيوية (جم/يوم تقدير)',
+    ptHarvest: 'سجلات حصاد الشمام', psHarvest: 'التاريخ وتوقعات الحصاد · شمام هيدروبونيك',
+    ctPeriode: 'موسم الحصاد', ctProgress: 'تقدم الحصاد الحالي', ctRiwayat: 'تاريخ حصاد الشمام',
+    ptWeather: 'الطقس والبيئة', ctRekCuaca: 'توصيات لمزرعة الشمام',
+    ctPrakiraan: 'توقعات درجة الحرارة لمدة 7 أيام',
+    notifTitle: 'الإشعارات', markAllRead: 'تحديد الكل كمقروء',
+    deleteAll: 'حذف الكل', noNotif: 'لا توجد إشعارات',
+    settingsTitle: 'إعدادات النظام',
+    settingsSub: 'تهيئة حدود المستشعر والأتمتة — إرسال إلى ESP32 عبر MQTT',
+    ctBatasPh: 'حدود pH', ctBatasTds: 'حدود TDS المغذيات', ctNotifSettings: 'الإشعارات',
+    langLabel: 'اختر اللغة', langSub: 'تغيير لغة عرض لوحة التحكم',
+    langApplied: '✓ تم تطبيق العربية',
+    lblPhMin: 'الحد الأدنى لـ pH', subPhMin: 'يُرسل إشعار عند انخفاض قيمة pH عن هذا الحد',
+    lblPhMax: 'الحد الأقصى لـ pH', subPhMax: 'يُرسل إشعار عند تجاوز قيمة pH هذا الحد',
+    lblHemat: 'وضع توفير الطاقة', subHemat: 'يقلل استهلاك الطاقة بنسبة 30% بين الساعة 22:00–05:00',
+    lblTdsMin: 'الحد الأدنى لـ TDS (ppm)', subTdsMin: 'يُرسل إشعار عند تخفيف تركيز المغذيات بشكل زائد',
+    lblTdsMax: 'الحد الأقصى لـ TDS (ppm)', subTdsMax: 'يُرسل إشعار عند ارتفاع تركيز المغذيات بشكل زائد',
+    lblWaNumber: 'رقم واتساب (CallMeBot)', subWaNumber: 'الصيغة: +628xxx', linkApiKey: 'تسجيل مفتاح API', btnTestWa: 'اختبار',
+    lblAlertPhSuhu: 'تنبيهات pH والحرارة', subAlertPhSuhu: 'إرسال إشعارات تلقائية عند تجاوز القيم للحدود',
+    lblEstimasiPanen: 'تقدير الحصاد', subEstimasiPanen: 'تذكير تلقائي قبل 5 أيام من موعد الحصاد',
+    lblLaporanHarian: 'تقرير يومي', subLaporanHarian: 'ملخص حالة المزرعة يُرسل يوميًا الساعة 20:00',
+    lblSuhuMin: 'الحد الأدنى لدرجة الحرارة (°C)', subSuhuMin: 'يُرسل إشعار عند انخفاض حرارة الماء بشكل زائد',
+    lblSuhuMax: 'الحد الأقصى لدرجة الحرارة (°C)', subSuhuMax: 'يُرسل إشعار عند ارتفاع حرارة الماء بشكل زائد',
+    ctBatasSuhu: 'حدود حرارة الماء', ctBahasa: 'Bahasa / Language',
+    belumDikirim: 'لم يُرسل بعد',
+    faseSemai: 'الإنبات (اليوم 1–10)', faseVegetatif: 'النمو الخضري (اليوم 11–40)',
+    fasePembungaan: 'الإزهار (اليوم 41–55)', fasePembuahan: 'الإثمار (اليوم 56–85)',
+    fasePanen: 'الحصاد (اليوم 85)', faseSaatIni: 'المرحلة الحالية',
+    noteSemai: 'استخدم محلول مغذيات مخففًا مع إضاءة معتدلة لمدة 8–10 ساعات يوميًا. التركيز الأساسي في هذه المرحلة هو إنبات الجذور — تجنب المحاليل المركزة جدًا حتى لا تتعرض الشتلات للإجهاد.',
+    noteVegetatif: 'ارفع مستوى النيتروجين (N) كعنصر أساسي لتكوين الأوراق والسيقان والكلوروفيل. تأكد من سلاسة الصرف لمنع تعفن الجذور بسبب الماء الراكد.',
+    notePembungaan: 'قلل النيتروجين (N) لإبطاء النمو الخضري. ارفع الفوسفور (P) لتحفيز الإزهار، والبوتاسيوم (K) لتقوية سيقان الأزهار.',
+    notePembuahan: 'ارفع البوتاسيوم (K) لتكبير حجم الثمار وزيادة الحلاوة وإطالة مدة التخزين. حدد النيتروجين حتى لا تكون الثمار مائية زيادة، وحافظ على استقرار الحرارة بين 18–24°م.',
+    notePanen: 'قلل كمية الماء ابتداءً من 7 أيام قبل الحصاد لزيادة نسبة السكر في الثمار (Brix). أوقف التغذية قبل 2–3 أيام من الحصاد لمذاق أحلى ونكهة مثالية.',
+    pillKritis: 'حرج', pillPeringatan: 'تحذير', pillInfo: 'معلومات',
+    dibaca: 'مقروء', belumDibaca: 'غير مقروء', tandaiDibaca: 'تحديد كمقروء', hapusSatu: 'حذف',
+    notifBatasPhSent: 'تم إرسال حدود pH إلى ESP32', notifBatasPhDetail: 'pH أدنى: {0}، أقصى: {1}',
+    notifBatasTdsSent: 'تم إرسال حدود TDS إلى ESP32', notifBatasTdsDetail: 'TDS أدنى: {0} ppm، أقصى: {1} ppm',
+    notifBatasSuhuSent: 'تم إرسال حدود الحرارة إلى ESP32', notifBatasSuhuDetail: 'حرارة أدنى: {0}°م، أقصى: {1}°م',
+    notifHematSent: 'تم إرسال إعدادات توفير الطاقة إلى ESP32',
+    notifOtomasiUpdated: 'تم تحديث الأتمتة',
+    notifPhTinggi: 'pH مرتفع جدًا: {0}', notifPhTinggiDetail: 'قيمة pH تتجاوز الحد الأقصى {0}. أضف محلول حمض الفوسفوريك 1–2 مل/لتر.',
+    notifPhRendah: 'pH منخفض جدًا: {0}', notifPhRendahDetail: 'قيمة pH أقل من الحد الأدنى {0}. أضف محلولًا قلويًا (KOH).',
+    notifSuhuTinggi: 'حرارة الماء مرتفعة جدًا: {0}°م', notifSuhuTinggiDetail: 'الحرارة تتجاوز الحد الأقصى {0}°م. فعّل التبريد.',
+    notifSuhuRendah: 'حرارة الماء منخفضة جدًا: {0}°م', notifSuhuRendahDetail: 'الحرارة أقل من الحد الأدنى {0}°م. فعّل التدفئة.',
+    notifTdsTinggi: 'TDS مرتفع جدًا: {0} ppm', notifTdsTinggiDetail: 'تركيز المغذيات يتجاوز الحد {0} ppm. خفف المحلول.',
+    notifLaporanHarian: 'التقرير اليومي متاح', notifLaporanHarianDetail: 'pH: {0}، TDS: {1} ppm، حرارة: {2}°م',
+    notifPanen5Hari: 'الحصاد خلال 5 أيام!', notifPanen5HariDetail: 'النباتات تقترب من موعد الحصاد في {0}. جهّز معدات الحصاد.',
+    notifPanenHariIni: 'اليوم هو يوم الحصاد!', notifPanenHariIniDetail: 'هذا هو يوم الحصاد المخطط له. حصادًا سعيدًا!',
+    notifSistemAktif: 'نظام HydroSense نشط', notifSistemAktifDetail: 'لوحة التحكم متصلة. في انتظار بيانات المستشعر عبر MQTT...',
+    notifPumpOn: 'تم التشغيل', notifPumpOff: 'تم الإيقاف', notifPumpConfirm: 'تأكيد من ESP32: {0} → {1}',
+    sentAt: '✓ تم الإرسال', notSent: '✗ MQTT غير متصل', sending: 'جارٍ الإرسال...',
+  },
 };
 
+const LANG_CODES = ['id','en','ms','zh','ja','ar'];
 let currentLang = localStorage.getItem('hydrosense_lang') || 'id';
 
 function setLang(lang) {
+  if (!LANG[lang]) return;
   currentLang = lang;
   try { localStorage.setItem('hydrosense_lang', lang); } catch(e) {}
   applyLang();
   const statusEl = document.getElementById('lang-status');
-  if (statusEl) statusEl.textContent = lang === 'id' ? '✓ Bahasa Indonesia diterapkan' : '✓ English applied';
+  if (statusEl) statusEl.textContent = LANG[lang].langApplied;
 }
 
 function applyLang() {
   const L = LANG[currentLang] || LANG.id;
 
-  // Buttons active state
-  const btnId = document.getElementById('lang-id');
-  const btnEn = document.getElementById('lang-en');
-  if (btnId && btnEn) {
-    if (currentLang === 'id') {
-      btnId.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--accent);background:rgba(29,158,117,0.15);color:var(--accent);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
-      btnEn.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
-    } else {
-      btnEn.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--accent);background:rgba(29,158,117,0.15);color:var(--accent);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
-      btnId.style.cssText = 'padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;font-family:var(--font-body);font-weight:500';
+  // Update active button state
+  LANG_CODES.forEach(code => {
+    const btn = document.getElementById('lang-' + code);
+    if (btn) {
+      btn.classList.toggle('active-lang', code === currentLang);
     }
-  }
+  });
+
+  // RTL support for Arabic
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
 
   const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-  const setHTML = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
-  // Sidebar nav labels
+  // ── Topbar ──
+  setText('lbl-mqtt-status', L.mqttStatus);
+
+  // ── Sidebar nav ──
+  setText('nav-grp-utama', L.grpUtama);
+  setText('nav-grp-analitik', L.grpAnalitik);
+  setText('nav-grp-sistem', L.grpSistem);
   setText('nav-lbl-dashboard', L.navDashboard);
   setText('nav-lbl-zones', L.navZona);
   setText('nav-lbl-sensors', L.navSensor);
@@ -2432,33 +3027,153 @@ function applyLang() {
   setText('nav-lbl-weather', L.navCuaca);
   setText('nav-lbl-alerts', L.navNotif);
   setText('nav-lbl-settings', L.navPengaturan);
-  setText('nav-grp-utama', L.utama);
-  setText('nav-grp-analitik', L.analitik);
-  setText('nav-grp-sistem', L.sistem);
+  setText('farm-name', L.farmName);
+  setText('farm-loc', L.farmLoc);
 
-  // Sensor card labels
-  setText('lbl-suhu-air', L.suhuAirLabel);
-  setText('lbl-suhu-ruang', L.suhuRuangLabel);
-  setText('lbl-ph', L.phLabel);
-  setText('lbl-tds', L.tdsLabel);
-  setText('lbl-kelembapan', L.kelembapanLabel);
+  // ── Bottom nav ──
+  setText('bn-lbl-dashboard', L.bnDashboard);
+  setText('bn-lbl-sensors', L.bnSensor);
+  setText('bn-lbl-pumps', L.bnPompa);
+  setText('bn-lbl-harvest', L.bnPanen);
+  setText('bn-lbl-alerts', L.bnNotif);
+  setText('bn-lbl-more', L.bnLainnya);
 
-  // Dashboard title
+  // ── Dashboard page ──
   setText('dash-title', L.dashTitle);
+  setText('btn-refresh', L.refreshBtn);
+  setText('lbl-suhu-air', L.suhuAir);
+  setText('lbl-suhu-ruang', L.suhuRuang);
+  setText('lbl-ph', L.phAir);
+  setText('lbl-tds', L.tdsNutrisi);
+  setText('lbl-kelembapan', L.kelembapan);
+  setText('ct-zona-aktif', L.zonaAktif);
+  setText('ct-notif-terbaru', L.notifTerbaru);
+  setText('ct-tren-sensor', L.trenSensor);
+  setText('dash-zone-pill', L.dashZonePill);
+  setText('dash-zone-crop', L.dashZoneCrop);
+  setText('lbl-ph-optimal', L.phOptimal);
+  setText('lbl-tds-optimal', L.tdsOptimal);
+  setText('lbl-suhu-optimal', L.suhuOptimal);
+  setText('static-notif-1', L.sn1); setText('static-notif-1-time', L.sn1t);
+  setText('static-notif-2', L.sn2); setText('static-notif-2-time', L.sn2t);
+  setText('static-notif-3', L.sn3); setText('static-notif-3-time', L.sn3t);
+  setText('static-notif-4', L.sn4); setText('static-notif-4-time', L.sn4t);
 
-  // Notifications page
+  // ── Zones page ──
+  setText('pt-zones', L.ptZones);
+  setText('ps-zones', L.psZones);
+  setText('gl-suhu-air', L.glSuhuAir);
+  setText('gl-ph', L.glPh);
+  setText('gl-tds', L.glTds);
+  setText('gl-kelembapan', L.glKelembapan);
+  setText('ct-zona-utama', L.ctZonaUtama);
+  setText('zm-lbl-suhu-air', L.zmSuhuAir);
+  setText('zm-lbl-suhu-ruang', L.zmSuhuRuang);
+  setText('zm-lbl-ph', L.zmPh);
+  setText('zm-lbl-tds', L.zmTds);
+  setText('zm-lbl-kelembapan', L.zmKelembapan);
+  setText('zm-lbl-status', L.zmStatus);
+  setText('lbl-fase-pertumbuhan', L.fasePertumbuhan);
+  setText('ct-param-optimal', L.ctParamOptimal);
+
+  // ── Sensors page ──
+  setText('pt-sensors', L.ptSensors);
+  setText('ps-sensors', L.psSensors);
+  setText('slbl-suhu-air', L.slSuhuAir);
+  setText('slbl-suhu-ruang', L.slSuhuRuang);
+  setText('slbl-ph', L.slPh);
+  setText('slbl-tds', L.slTds);
+  setText('slbl-kelembapan', L.slKelembapan);
+  setText('ct-sensor-status', L.ctSensorStatus);
+  setText('ct-grafik-sensor', L.ctGrafikSensor);
+
+  // ── Pumps page ──
+  setText('pt-pumps', L.ptPumps);
+  setText('ps-pumps', L.psPumps);
+  setText('ct-jadwal-irigasi', L.ctJadwal);
+
+  // ── Analytics page ──
+  setText('pt-analytics', L.ptAnalytics);
+  setText('ps-analytics', L.psAnalytics);
+  setText('ct-ph-harian', L.ctPhHarian);
+  setText('ct-konsumsi-air', L.ctAir);
+  setText('ct-konsumsi-nutrisi', L.ctNutrisi);
+  setText('ct-biomassa', L.ctBiomassa);
+
+  // ── Harvest page ──
+  setText('pt-harvest', L.ptHarvest);
+  setText('ps-harvest', L.psHarvest);
+  setText('ct-periode-panen', L.ctPeriode);
+  setText('ct-progress-panen', L.ctProgress);
+  setText('ct-riwayat-panen', L.ctRiwayat);
+
+  // ── Weather page ──
+  setText('pt-weather', L.ptWeather);
+  setText('ct-rekomendasi-cuaca', L.ctRekCuaca);
+  setText('ct-prakiraan-suhu', L.ctPrakiraan);
+
+  // ── Notifications page ──
   setText('notif-page-title', L.notifTitle);
   setText('btn-mark-all-read', L.markAllRead);
   setText('btn-delete-all', L.deleteAll);
 
-  // Settings page
+  // ── Settings page ──
   setText('settings-page-title', L.settingsTitle);
   setText('settings-page-sub', L.settingsSub);
+  setText('ct-batas-ph', L.ctBatasPh);
+  setText('ct-batas-tds', L.ctBatasTds);
+  setText('ct-batas-suhu', L.ctBatasSuhu);
+  setText('ct-notif-settings', L.ctNotifSettings);
+  setText('ct-bahasa', L.ctBahasa);
   setText('lang-label-title', L.langLabel);
   setText('lang-label-sub', L.langSub);
 
-  // Re-render notifs with new language
+  setText('lbl-set-ph-min', L.lblPhMin); setText('sub-set-ph-min', L.subPhMin);
+  setText('lbl-set-ph-max', L.lblPhMax); setText('sub-set-ph-max', L.subPhMax);
+  setText('lbl-set-hemat', L.lblHemat); setText('sub-set-hemat', L.subHemat);
+  setText('lbl-set-tds-min', L.lblTdsMin); setText('sub-set-tds-min', L.subTdsMin);
+  setText('lbl-set-tds-max', L.lblTdsMax); setText('sub-set-tds-max', L.subTdsMax);
+  setText('lbl-wa-number', L.lblWaNumber); setText('sub-wa-number', L.subWaNumber);
+  setText('link-api-key', L.linkApiKey); setText('btn-test-wa', L.btnTestWa);
+  setText('lbl-alert-ph-suhu', L.lblAlertPhSuhu); setText('sub-alert-ph-suhu', L.subAlertPhSuhu);
+  setText('lbl-estimasi-panen', L.lblEstimasiPanen); setText('sub-estimasi-panen', L.subEstimasiPanen);
+  setText('lbl-laporan-harian', L.lblLaporanHarian); setText('sub-laporan-harian', L.subLaporanHarian);
+  setText('lbl-set-suhu-min', L.lblSuhuMin); setText('sub-set-suhu-min', L.subSuhuMin);
+  setText('lbl-set-suhu-max', L.lblSuhuMax); setText('sub-set-suhu-max', L.subSuhuMax);
+
+  // Sync badges that still show default "Belum dikirim"
+  ['ph-sync-badge','tds-sync-badge','suhu-sync-badge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.classList.contains('idle')) el.textContent = L.belumDikirim;
+  });
+
+  // ── Fase parameter cards ──
+  setText('fp-semai-name', L.faseSemai);
+  setText('fp-vegetatif-name', L.faseVegetatif);
+  setText('fp-pembungaan-name', L.fasePembungaan);
+  setText('fp-pembuahan-name', L.fasePembuahan);
+  setText('fp-panen-name', L.fasePanen);
+  const activeBadge = document.getElementById('fp-active-badge');
+  if (activeBadge) activeBadge.textContent = L.faseSaatIni;
+  for (let i = 1; i <= 5; i++) {
+    setText('fp-lbl-ph-' + i, L.lblPh);
+    setText('fp-lbl-tds-' + i, L.lblTdsPpm);
+    setText('fp-lbl-suhu-' + i, L.lblSuhuAirFp);
+    setText('fp-lbl-kel-' + i, L.lblKelembapanFp);
+  }
+  setText('fp-note-1', L.noteSemai);
+  setText('fp-note-2', L.noteVegetatif);
+  setText('fp-note-3', L.notePembungaan);
+  setText('fp-note-4', L.notePembuahan);
+  setText('fp-note-5', L.notePanen);
+
+  // Re-render notifs (uses noNotif string)
   renderNotifs();
+}
+
+/* Helper: simple {0}{1} template formatter */
+function t(str, ...args) {
+  return str.replace(/\{(\d+)\}/g, (m, i) => args[i] !== undefined ? args[i] : m);
 }
 
 /* Array notifikasi aktif */
@@ -2503,21 +3218,21 @@ function addNotif(type, title, detail, sendWA) {
 function renderNotifs() {
   const list = document.getElementById('alerts-list');
   if (!list) return;
+  const L = LANG[currentLang] || LANG.id;
   if (notifications.length === 0) {
-    const L = LANG[currentLang] || LANG.id;
     list.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px">${L.noNotif}</div>`;
     return;
   }
   const typeMap = {
-    danger: { cls:'ar-danger', dot:'#E24B4A', pill:'<span class="pill pill-red">Kritis</span>' },
-    warn:   { cls:'ar-warn',   dot:'#BA7517', pill:'<span class="pill pill-amber">Peringatan</span>' },
-    info:   { cls:'ar-info',   dot:'#378ADD', pill:'<span class="pill pill-blue">Info</span>' },
+    danger: { cls:'ar-danger', dot:'#E24B4A', pill:`<span class="pill pill-red">${L.pillKritis}</span>` },
+    warn:   { cls:'ar-warn',   dot:'#BA7517', pill:`<span class="pill pill-amber">${L.pillPeringatan}</span>` },
+    info:   { cls:'ar-info',   dot:'#378ADD', pill:`<span class="pill pill-blue">${L.pillInfo}</span>` },
     ok:     { cls:'ar-ok',     dot:'#1D9E75', pill:'' },
   };
   list.innerHTML = notifications.map(n => {
     const tm = typeMap[n.type] || typeMap.info;
     const ago = timeAgo(n.time);
-    const readTxt = n.read ? 'Dibaca' : 'Belum dibaca';
+    const readTxt = n.read ? L.dibaca : L.belumDibaca;
     const opacity = n.read ? 'opacity:0.6;' : '';
     return `<div class="alert-row ${tm.cls}" id="notif-${n.id}" style="${opacity}">
       <div class="ar-dot" style="background:${tm.dot}"></div>
@@ -2528,8 +3243,8 @@ function renderNotifs() {
           <div class="ar-time">${ago} · ${readTxt}</div>
           <div style="display:flex;gap:6px;align-items:center">
             ${tm.pill}
-            ${!n.read ? `<button onclick="markRead(${n.id})" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:10px;color:var(--text-muted);cursor:pointer">Tandai dibaca</button>` : ''}
-            <button onclick="deleteNotif(${n.id})" style="background:none;border:1px solid rgba(226,75,74,0.3);border-radius:4px;padding:2px 8px;font-size:10px;color:#E24B4A;cursor:pointer">Hapus</button>
+            ${!n.read ? `<button onclick="markRead(${n.id})" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:10px;color:var(--text-muted);cursor:pointer">${L.tandaiDibaca}</button>` : ''}
+            <button onclick="deleteNotif(${n.id})" style="background:none;border:1px solid rgba(226,75,74,0.3);border-radius:4px;padding:2px 8px;font-size:10px;color:#E24B4A;cursor:pointer">${L.hapusSatu}</button>
           </div>
         </div>
       </div>
@@ -2595,19 +3310,19 @@ function timeAgo(date) {
 /* Periksa threshold dari data sensor → buat alert */
 function checkThresholds(suhuAir, ph, tds) {
   if (ph > THRESHOLDS.phMax && canAlert('ph_high')) {
-    addNotif('warn', `pH terlalu tinggi: ${ph.toFixed(1)}`, `Nilai pH melebihi batas maksimum ${THRESHOLDS.phMax}. Tambahkan larutan asam phosphat 1–2 ml/L.`, true);
+    { const L6=LANG[currentLang]||LANG.id; addNotif('warn', t(L6.notifPhTinggi, ph.toFixed(1)), t(L6.notifPhTinggiDetail, THRESHOLDS.phMax), true); }
   }
   if (ph < THRESHOLDS.phMin && canAlert('ph_low')) {
-    addNotif('warn', `pH terlalu rendah: ${ph.toFixed(1)}`, `Nilai pH di bawah batas minimum ${THRESHOLDS.phMin}. Tambahkan larutan basa (KOH).`, true);
+    { const L7=LANG[currentLang]||LANG.id; addNotif('warn', t(L7.notifPhRendah, ph.toFixed(1)), t(L7.notifPhRendahDetail, THRESHOLDS.phMin), true); }
   }
   if (suhuAir > THRESHOLDS.suhuMax && canAlert('suhu_high')) {
-    addNotif('danger', `Suhu air terlalu tinggi: ${suhuAir.toFixed(1)}°C`, `Suhu melewati batas maksimum ${THRESHOLDS.suhuMax}°C. Aktifkan pendingin.`, true);
+    { const L8=LANG[currentLang]||LANG.id; addNotif('danger', t(L8.notifSuhuTinggi, suhuAir.toFixed(1)), t(L8.notifSuhuTinggiDetail, THRESHOLDS.suhuMax), true); }
   }
   if (suhuAir < THRESHOLDS.suhuMin && canAlert('suhu_low')) {
-    addNotif('danger', `Suhu air terlalu rendah: ${suhuAir.toFixed(1)}°C`, `Suhu di bawah batas minimum ${THRESHOLDS.suhuMin}°C. Aktifkan pemanas.`, true);
+    { const L9=LANG[currentLang]||LANG.id; addNotif('danger', t(L9.notifSuhuRendah, suhuAir.toFixed(1)), t(L9.notifSuhuRendahDetail, THRESHOLDS.suhuMin), true); }
   }
   if (tds > THRESHOLDS.tdsMax && canAlert('tds_high')) {
-    addNotif('warn', `TDS terlalu tinggi: ${tds} ppm`, `Konsentrasi nutrisi melewati batas ${THRESHOLDS.tdsMax} ppm. Encerkan larutan.`, true);
+    { const L10=LANG[currentLang]||LANG.id; addNotif('warn', t(L10.notifTdsTinggi, tds), t(L10.notifTdsTinggiDetail, THRESHOLDS.tdsMax), true); }
   }
 }
 
@@ -2627,7 +3342,7 @@ function checkDailyReport() {
     const msg = `📊 Laporan Harian HydroSense
 Tanggal: ${today}
 pH: ${last.toFixed(1)} | TDS: ${Math.round(lastTDS*100)} ppm | Suhu: ${lastSuhu.toFixed(1)}°C`;
-    addNotif('info', 'Laporan harian tersedia', `pH: ${last.toFixed(1)}, TDS: ${Math.round(lastTDS*100)} ppm, Suhu: ${lastSuhu.toFixed(1)}°C`);
+    { const L11=LANG[currentLang]||LANG.id; addNotif('info', L11.notifLaporanHarian, t(L11.notifLaporanHarianDetail, last.toFixed(1), Math.round(lastTDS*100), lastSuhu.toFixed(1))); }
     sendWhatsApp(msg);
   }
 }
@@ -2651,11 +3366,11 @@ function checkPanenNotif() {
   if (!selesai) return;
   const diff = Math.floor((new Date(selesai) - new Date()) / 86400000);
   if (diff === 5 && canAlert('panen_5')) {
-    addNotif('info', 'Panen dalam 5 hari!', `Tanaman mendekati waktu panen pada ${selesai}. Siapkan peralatan panen.`);
+    { const L12=LANG[currentLang]||LANG.id; addNotif('info', L12.notifPanen5Hari, t(L12.notifPanen5HariDetail, selesai)); }
     sendWhatsApp(`🌾 HydroSense: Tanaman Anda siap panen dalam 5 hari (${selesai}). Siapkan peralatan!`);
   }
   if (diff === 0 && canAlert('panen_0')) {
-    addNotif('ok', 'Waktu panen hari ini!', `Ini hari panen yang direncanakan. Selamat panen!`);
+    { const L13=LANG[currentLang]||LANG.id; addNotif('ok', L13.notifPanenHariIni, L13.notifPanenHariIniDetail); }
     sendWhatsApp(`🎉 HydroSense: Selamat! Hari ini adalah hari panen yang direncanakan.`);
   }
 }
@@ -2665,7 +3380,7 @@ setInterval(checkPanenNotif, 3600000); // cek tiap jam
 function initNotifs() {
   // Seed notif awal jika kosong (demo awal)
   if (notifications.length === 0) {
-    addNotif('ok', 'Sistem HydroSense aktif', 'Dashboard terhubung. Menunggu data sensor dari MQTT...');
+    { const L14=LANG[currentLang]||LANG.id; addNotif('ok', L14.notifSistemAktif, L14.notifSistemAktifDetail); }
   }
   renderNotifs();
   updateNotifBadge();
@@ -2967,7 +3682,7 @@ function connectMQTT() {
               if (statEl) statEl.textContent = isOn ? 'Aktif' : 'Nonaktif';
             }
           }
-          addNotif('ok', `${pumpName} ${state === 'ON' ? 'dinyalakan' : 'dimatikan'}`, `Konfirmasi dari ESP32: ${pumpName} → ${state}`);
+          { const L15=LANG[currentLang]||LANG.id; addNotif('ok', `${pumpName} ${state === 'ON' ? L15.notifPumpOn : L15.notifPumpOff}`, t(L15.notifPumpConfirm, pumpName, state)); }
         }
         return;
       }
@@ -3118,7 +3833,7 @@ function controlPH(delta) {
   const ok = mqttPublish('iot/soccer/control', 'pH,' + ctrlPH.toFixed(1));
   document.getElementById('ctrl-ph-status').textContent = ok
     ? '✓ Dikirim: pH → ' + ctrlPH.toFixed(1)
-    : '✗ MQTT belum terhubung';
+    : (LANG[currentLang]||LANG.id).notSent;
 }
 
 function controlTDS(delta) {
@@ -3128,7 +3843,7 @@ function controlTDS(delta) {
   const ok = mqttPublish('iot/soccer/control', 'TDS,' + ctrlTDS);
   document.getElementById('ctrl-tds-status').textContent = ok
     ? '✓ Dikirim: TDS → ' + ctrlTDS
-    : '✗ MQTT belum terhubung';
+    : (LANG[currentLang]||LANG.id).notSent;
 }
 
 function controlSoil(delta) {
@@ -3138,7 +3853,7 @@ function controlSoil(delta) {
   const ok = mqttPublish('iot/soccer/control', 'SOIL,' + ctrlSoil);
   document.getElementById('ctrl-soil-status').textContent = ok
     ? '✓ Dikirim: SOIL → ' + ctrlSoil + '%'
-    : '✗ MQTT belum terhubung';
+    : (LANG[currentLang]||LANG.id).notSent;
 }
 
 /* ── JADWAL IRIGASI — realtime ───────────── */
@@ -3735,21 +4450,28 @@ function renderNutrisiCard(fase) {
   }
 }
 
-/* ── HIGHLIGHT TABEL PARAMETER FASE ── */
+/* ── HIGHLIGHT KARTU PARAMETER FASE ── */
 function highlightTabelFase(fase) {
-  const tbl = document.getElementById('tabel-parameter-fase');
-  if (!tbl) return;
-  const rows = tbl.querySelectorAll('tbody tr');
-  rows.forEach(row => {
-    const f = row.getAttribute('data-fase');
+  const list = document.getElementById('tabel-parameter-fase');
+  if (!list) return;
+  const items = list.querySelectorAll('.fase-param-item');
+  items.forEach(item => {
+    const f = item.getAttribute('data-fase');
+    const head = item.querySelector('.fpi-head');
+    let badge = item.querySelector('.fpi-active-badge');
     if (f === fase) {
-      row.style.background = 'rgba(29,158,117,0.07)';
-      row.style.borderLeft = '2px solid var(--accent)';
-      const td = row.querySelector('td');
-      if (td) td.innerHTML = `<b style="color:#5DCAA5">${td.textContent} ← Saat ini</b>`;
+      item.classList.add('active');
+      if (!badge && head) {
+        badge = document.createElement('span');
+        badge.className = 'fpi-active-badge';
+        badge.id = 'fp-active-badge';
+        const L = LANG[currentLang] || LANG.id;
+        badge.textContent = L.faseSaatIni || 'Fase Saat Ini';
+        head.appendChild(badge);
+      }
     } else {
-      row.style.background = '';
-      row.style.borderLeft = '';
+      item.classList.remove('active');
+      if (badge) badge.remove();
     }
   });
 }
